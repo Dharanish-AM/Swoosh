@@ -47,7 +47,7 @@ wss.on("connection", (ws, req) => {
         if (!name || !ip) {
           ws.send(JSON.stringify({ error: "Missing parameters" }));
           return;
-        }
+        } 
 
         let newSessionId =
           sessionId || Math.random().toString(36).substring(2, 10);
