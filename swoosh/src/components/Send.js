@@ -137,7 +137,7 @@ export default function Send() {
         .catch((error) => console.error("Error creating offer:", error));
     };
 
-    createOffer(); // Automatically create the offer on mount
+    // createOffer(); 
 
     return () => {
       signalingChannel.close();
