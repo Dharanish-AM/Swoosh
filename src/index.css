@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import "tailwindcss";
+
+:root {
+  font-family: Montserrat, Avenir, Helvetica, Arial, sans-serif;
+  --primary-color: #1e40af;
+  --secondary-color: #f3f4f6;
+  --accent-color: #f59e0b;
+  --background-color: #f8fafc;
+  --text-color: #111827;
+  --border-color: #d1d5db;
+  --hover-color: #e5e7eb;
+  --focus-color: #3b82f6;
+  --error-color: #ef4444;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --info-color: #2563eb;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
