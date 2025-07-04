@@ -1,5 +1,5 @@
-// utils/discovery.js
 const dgram = require('dgram');
+const os = require("os");
 
 const PORT = 41234;
 let socket = null;
@@ -7,12 +7,22 @@ let devices = {};
 
 console.log("📡 Discovery module loaded");
 
+const localIPs = Object.values(os.networkInterfaces())
+  .flat()
+  .filter((iface) => iface.family === "IPv4" && !iface.internal)
+  .map((iface) => iface.address);
+
+
 function startDeviceDiscovery(onDeviceUpdate) {
   socket = dgram.createSocket('udp4');
 
   socket.on('message', (msg, rinfo) => {
     try {
       const data = JSON.parse(msg.toString());
+
+      // ✅ Ignore self device based on local IP
+      if (localIPs.includes(rinfo.address)) return;
+
       if (data.type === 'swoosh-discovery') {
         devices[data.id] = {
           name: data.name,
@@ -32,21 +42,6 @@ function startDeviceDiscovery(onDeviceUpdate) {
     console.log(`✅ [Discovery] Listening for devices on UDP port ${PORT}`);
   });
 
-  // Prune stale devices
-  setInterval(() => {
-    const now = Date.now();
-    const before = Object.keys(devices).length;
-
-    devices = Object.fromEntries(
-      Object.entries(devices).filter(([_, dev]) => now - dev.lastSeen < 15000)
-    );
-
-    const after = Object.keys(devices).length;
-    if (before !== after) {
-      console.log(`🧹 [Discovery] Cleaned up stale devices (${before - after} removed)`);
-      onDeviceUpdate(Object.values(devices));
-    }
-  }, 8000);
 }
 
 function stopDeviceDiscovery() {

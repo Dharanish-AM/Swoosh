@@ -27,7 +27,7 @@
     }
   },
   "scripts": {
-    "dev": "concurrently \"vite --host\" \"wait-on http://localhost:5173 && electron .\"",
+    "dev": "concurrently \"vite --host\" \"wait-on http://localhost:5173 && npm start .\"",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -50,6 +50,7 @@
     "concurrently": "^9.2.0",
     "electron": "^37.2.0",
     "electron-builder": "^26.0.12",
+    "electronmon": "^2.0.3",
     "eslint": "^9.29.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",

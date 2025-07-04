@@ -86,7 +86,7 @@ export default function Home() {
         </div>
         <div
           onClick={() => navigate("/send")}
-          className="text-[#27548A] font-medium italic text-l hover:underline mt-4 cursor-pointer transition duration-200"
+          className="text-[#27548A] font-medium italic text-sm hover:underline mt-4 cursor-pointer transition duration-200"
         >
           Show Nearby Devices
         </div>

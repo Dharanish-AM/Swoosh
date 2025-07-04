@@ -35,10 +35,10 @@ function startBroadcastingSelf() {
       if (err) {
         console.error('❌ [Broadcaster] Error sending broadcast:', err.message);
       } else {
-        console.log(`📡 [Broadcaster] Broadcast sent: ${JSON.stringify(payload)}`);
+        // console.log(`📡 [Broadcaster] Broadcast sent: ${JSON.stringify(payload)}`);
       }
     });
-  }, 5000); // every 5 seconds
+  }, 1000); 
 }
 
 function stopBroadcastingSelf() {
