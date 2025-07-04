@@ -1,11 +1,8 @@
-/* eslint-disable no-undef */
-window.addEventListener('DOMContentLoaded', () => {
-  const replaceText = (selector, text) => {
-    const element = document.getElementById(selector)
-    if (element) element.innerText = text
-  }
+// preload.js
+const { contextBridge, ipcRenderer } = require("electron");
 
-  for (const type of ['chrome', 'node', 'electron']) {
-    replaceText(`${type}-version`, process.versions[type])
+contextBridge.exposeInMainWorld("swoosh", {
+  onDevicesUpdated: (callback) => {
+    ipcRenderer.on("devices", (_, devices) => callback(devices));
   }
-})
+});
