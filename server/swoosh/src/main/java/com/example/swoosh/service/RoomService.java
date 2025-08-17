@@ -10,18 +10,19 @@ import com.example.swoosh.repository.RoomRepository;
 @Service
 public class RoomService {
     @Autowired
-    private final RoomRepository roomRepository;
+    private RoomRepository roomRepository;
 
-    public RoomService(RoomRepository roomRepository) {
-        this.roomRepository = roomRepository;
+    public Room getRoomById(Long id) {
+        return roomRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with id: " + id));
     }
 
     public Room createRoom(Room room) {
         return roomRepository.save(room);
     }
 
-    public Room getRoomById(Long id) {
-        return roomRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
+    public void deleteRoom(Long id) {
+        Room room = getRoomById(id);
+        roomRepository.delete(room);
     }
 }
