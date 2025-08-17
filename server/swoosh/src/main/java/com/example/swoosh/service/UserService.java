@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.example.swoosh.DTO.UserResponseDTO;
 import com.example.swoosh.exception.EmailAlreadyExistsException;
 import com.example.swoosh.model.User;
 import com.example.swoosh.repository.UserRepository;
@@ -31,13 +30,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public UserResponseDTO getUserById(Long id) {
+    public User getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User doesn't exist"));
-        return new UserResponseDTO(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                user.getRegisteredAt());
+        user.setHashPassword(null);
+        return user;
     }
 }
