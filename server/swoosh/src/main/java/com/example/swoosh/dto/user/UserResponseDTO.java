@@ -1,4 +1,4 @@
-package com.example.swoosh.DTO;
+package com.example.swoosh.dto.user;
 
 import java.time.LocalDateTime;
 
