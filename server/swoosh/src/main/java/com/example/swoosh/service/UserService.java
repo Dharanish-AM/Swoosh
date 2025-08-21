@@ -3,9 +3,12 @@ package com.example.swoosh.service;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
+import com.example.swoosh.dto.user.UserMapper;
+import com.example.swoosh.dto.user.UserRequestDTO;
+import com.example.swoosh.dto.user.UserResponseDTO;
 import com.example.swoosh.exception.EmailAlreadyExistsException;
 import com.example.swoosh.model.User;
 import com.example.swoosh.repository.UserRepository;
@@ -15,25 +18,29 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User createUser(User user) {
-        System.out.println("name: " + user.getName() +
-                ", email: " + user.getEmail() +
-                ", password: " + user.getPassword());
-        String email = user.getEmail();
+    public UserResponseDTO createUser(UserRequestDTO user) {
+        User newUser = UserMapper.toEntity(user);
+        System.out.println("name: " + newUser.getName() +
+                ", email: " + newUser.getEmail() +
+                ", password: " + newUser.getPassword());
+        String email = newUser.getEmail();
         if (userRepository.findByEmail(email).isPresent()) {
             throw new EmailAlreadyExistsException("Email already exists");
         }
-        String password = user.getPassword();
+        String password = newUser.getPassword();
         String encodedPassword = new BCryptPasswordEncoder().encode(password);
-        user.setHashPassword(encodedPassword);
-        user.setRegisteredAt(LocalDateTime.now());
-        return userRepository.save(user);
+        newUser.setHashPassword(encodedPassword);
+        newUser.setRegisteredAt(LocalDateTime.now());
+        userRepository.save(newUser);
+        UserResponseDTO response = UserMapper.toResponseDTO(newUser);
+        return response;
     }
 
-    public User getUserById(Long id) {
+    public UserResponseDTO getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User doesn't exist"));
-        user.setHashPassword(null);
-        return user;
+
+        UserResponseDTO response = UserMapper.toResponseDTO(user);
+        return response;
     }
 }

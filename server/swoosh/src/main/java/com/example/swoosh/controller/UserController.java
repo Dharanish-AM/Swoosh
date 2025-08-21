@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.swoosh.model.User;
+import com.example.swoosh.dto.user.UserRequestDTO;
+import com.example.swoosh.dto.user.UserResponseDTO;
 import com.example.swoosh.service.UserService;
 
 @RestController
@@ -18,12 +19,12 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
+    public UserResponseDTO getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
     @PostMapping
-    public User addUser(@RequestBody User user) {
+    public UserResponseDTO addUser(@RequestBody UserRequestDTO user) {
         return userService.createUser(user);
     }
 

@@ -1,18 +1,14 @@
 package com.example.swoosh.dto.user;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserRequestDTO {
     private String name;
     private String email;
     private String password;
-
-    public UserRequestDTO() {
-    }
-
-    public UserRequestDTO(String name, String email, String password) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-    }
 
     // Getters
     public String getName() {

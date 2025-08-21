@@ -6,17 +6,17 @@ public class UserMapper {
 
     public static User toEntity(UserRequestDTO dto) {
         User user = new User();
-        user.setHashPassword(dto.getPassword()); // hash before saving
+        user.setHashPassword(dto.getPassword()); 
         user.setRegisteredAt(java.time.LocalDateTime.now());
         return user;
     }
 
-    public static UserResponseDTO toResponseDTO(User user) {
-        return new UserResponseDTO(
-            user.getId(),
-            user.getName(),
-            user.getEmail(),
-            user.getRegisteredAt()
-        );
-    }
+public static UserResponseDTO toResponseDTO(User user) {
+    return new UserResponseDTO(
+        user.getId(),
+        user.getName(),
+        user.getEmail(),
+        user.getRegisteredAt()
+    );
+}
 }

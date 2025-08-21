@@ -2,18 +2,17 @@ package com.example.swoosh.dto.user;
 
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 @SuppressWarnings("unused")
+@AllArgsConstructor
+@Data
 public class UserResponseDTO {
     private final Long id;
     private final String name;
     private final String email;
     private final LocalDateTime registeredAt;
-
-    public UserResponseDTO(Long id, String name, String email, LocalDateTime registeredAt) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.registeredAt = registeredAt;
-    }
+    
 
 }
