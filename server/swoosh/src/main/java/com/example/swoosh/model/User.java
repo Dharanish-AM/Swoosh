@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -21,6 +22,7 @@ import lombok.NoArgsConstructor;
 @SuppressWarnings("unused")
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +39,7 @@ public class User {
 
     // Relationships
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private final List<Room> rooms = new ArrayList<>();
+    private List<Room> rooms = new ArrayList<>();
 
     // Getters & Setters
     public Long getId() {

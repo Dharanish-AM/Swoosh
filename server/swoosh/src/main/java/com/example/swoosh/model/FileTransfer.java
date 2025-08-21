@@ -10,10 +10,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import lombok.Data;
 
 @Entity
-@Table(name = "file_transfers")
+@SuppressWarnings("unused")
+@Data
 public class FileTransfer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
