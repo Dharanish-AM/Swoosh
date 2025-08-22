@@ -69,4 +69,8 @@ public class User {
     public void setHashPassword(String password) {
         this.password = password;
     }
+
+    public void addRoom(Room room) {
+        this.rooms.add(room);
+    }
 }

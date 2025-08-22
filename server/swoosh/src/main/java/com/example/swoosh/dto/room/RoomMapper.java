@@ -1,17 +1,27 @@
 package com.example.swoosh.dto.room;
 
+import java.util.List;
+
 import com.example.swoosh.model.Room;
 
 public class RoomMapper {
     public static RoomResponseDTO toResponseDTO(Room room) {
+        List<FileTransferSummaryDTO> fileTransfers = room.getTransfers().stream()
+                .map(transfer -> new FileTransferSummaryDTO(
+                        transfer.getId(),
+                        transfer.getFileName(),
+                        transfer.getFileSize(),
+                        transfer.getSentAt(),
+                        transfer.getStatus()))
+                .toList();
+
         return new RoomResponseDTO(
                 room.getId(),
                 room.getRoomCode(),
                 room.getCreatedAt(),
                 room.getExpiresAt(),
                 room.getUser(),
-                room.getTransfers()
-        );
+                fileTransfers);
     }
 
     public static Room toEntity(RoomRequestDTO roomRequestDTO) {

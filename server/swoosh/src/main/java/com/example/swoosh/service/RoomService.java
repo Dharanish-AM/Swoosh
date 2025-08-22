@@ -30,7 +30,7 @@ public class RoomService {
     }
 
     public RoomResponseDTO createRoom(Long userId) {
-        if(userId == null) {
+        if (userId == null) {
             throw new IllegalArgumentException("User ID must not be null");
         }
         User user = userRepository.findById(userId)
@@ -46,12 +46,10 @@ public class RoomService {
         room.setRoomCode(roomCode);
         room.setCreatedAt(createdAt);
         room.setExpiresAt(expiresAt);
-        room.setUser(user);
+        room.setUser(user); // owning side
         room.setTransfers(new ArrayList<>());
 
-        Room savedRoom = roomRepository.save(room);
-        user.getRooms().add(savedRoom);
-        userRepository.save(user);
+        Room savedRoom = roomRepository.save(room); 
         return RoomMapper.toResponseDTO(savedRoom);
     }
 
