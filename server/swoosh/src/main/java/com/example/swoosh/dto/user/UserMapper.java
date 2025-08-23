@@ -1,6 +1,7 @@
 package com.example.swoosh.dto.user;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.example.swoosh.dto.room.RoomSummaryDTO;
 import com.example.swoosh.model.User;
@@ -18,13 +19,13 @@ public class UserMapper {
 
     public static UserResponseDTO toResponseDTO(User user) {
         List<RoomSummaryDTO> roomDTOs = user.getRooms().stream()
-                .map(room -> new RoomSummaryDTO(
+                .map(room -> (RoomSummaryDTO) new RoomSummaryDTO(
                         room.getId(),
                         room.getRoomCode(),
                         room.getCreatedAt(),
                         room.getExpiresAt(),
                         room.getStatus()))
-                .toList();
+                .collect(Collectors.toList());
 
         return new UserResponseDTO(
                 user.getId(),

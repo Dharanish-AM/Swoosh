@@ -2,6 +2,8 @@ package com.example.swoosh.dto.room;
 
 import java.time.LocalDateTime;
 
+import com.example.swoosh.model.Room;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -12,5 +14,5 @@ public class RoomSummaryDTO {
     private final String roomCode;
     private final LocalDateTime createdAt;
     private final LocalDateTime expiresAt;
-    private final String status;
+    private final Room.RoomStatus status;
 }

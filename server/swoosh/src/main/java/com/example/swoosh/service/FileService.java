@@ -14,15 +14,18 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.swoosh.dto.filetransfer.FileRequestDTO;
 import com.example.swoosh.dto.filetransfer.FileResponseDTO;
 import com.example.swoosh.dto.room.RoomMapper;
-import com.example.swoosh.dto.room.RoomSummaryDTO;
 import com.example.swoosh.model.File;
 import com.example.swoosh.model.Room;
 import com.example.swoosh.repository.FileRepository;
+import com.example.swoosh.repository.RoomRepository;
 
 @Service
 public class FileService {
     @Autowired
     private FileRepository fileTransferRepository;
+
+    @Autowired
+    private RoomRepository roomRepository;
 
     public FileResponseDTO getFileTransferById(Long id) {
         return null;
@@ -33,8 +36,8 @@ public class FileService {
         if (multipartFile == null || multipartFile.isEmpty()) {
             throw new IllegalArgumentException("File must not be null or empty");
         }
-        String roomId = String.valueOf(fileTransferDTO.getRoom().getId());
-        String uploadDir = "uploads/" + roomId;
+        Long roomId = fileTransferDTO.getRoom().getId();
+        String uploadDir = "uploads/" + roomId.toString();
         Path uploadPath = Paths.get(uploadDir);
         try {
             if (!Files.exists(uploadPath)) {
@@ -44,13 +47,16 @@ public class FileService {
             Path filePath = uploadPath.resolve(originalFilename);
             Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
+            //find room from request room id
+            Room room = roomRepository.findById(roomId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid room ID"));
+
             File fileEntity = new File();
             fileEntity.setFileName(originalFilename);
             fileEntity.setFileSize(multipartFile.getSize());
             fileEntity.setSentAt(LocalDateTime.now());
             fileEntity.setStatus("SENT");
             fileEntity.setFilePath(filePath.toString());
-            Room room = RoomMapper.toEntity(fileTransferDTO.getRoom());
             fileEntity.setRoom(room);
 
             File savedFile = fileTransferRepository.save(fileEntity);

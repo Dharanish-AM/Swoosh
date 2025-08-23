@@ -1,5 +1,6 @@
 package com.example.swoosh.dto.filetransfer;
 
+import com.example.swoosh.dto.room.RoomMapper;
 import com.example.swoosh.model.File;
 
 public class FileMapper {
@@ -7,12 +8,16 @@ public class FileMapper {
         if (fileTransfer == null) {
             return null;
         }
+
         return new FileResponseDTO(
                 fileTransfer.getId(),
                 fileTransfer.getFileName(),
                 fileTransfer.getFileSize(),
+                fileTransfer.getFilePath(),
                 fileTransfer.getSentAt(),
-                fileTransfer.getStatus()
+                fileTransfer.getStatus(),
+                RoomMapper.toSummaryDTO(fileTransfer.getRoom())
+                
         );
     }
 
