@@ -4,22 +4,22 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.swoosh.model.FileTransfer;
+import com.example.swoosh.model.File;
+import com.example.swoosh.model.Room;
 import com.example.swoosh.model.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class RoomRequestDTO {
     private Long id;
     private String roomCode;
     private User user;
     private LocalDateTime createdAt;
+    private final Room.RoomStatus status;
     private LocalDateTime expiresAt;
-    private List<FileTransfer> transfers = new ArrayList<>();
+    private List<File> transfers = new ArrayList<>();
 
 }

@@ -22,7 +22,8 @@ public class UserMapper {
                         room.getId(),
                         room.getRoomCode(),
                         room.getCreatedAt(),
-                        room.getExpiresAt()))
+                        room.getExpiresAt(),
+                        room.getStatus()))
                 .toList();
 
         return new UserResponseDTO(

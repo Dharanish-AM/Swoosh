@@ -12,4 +12,5 @@ public class RoomSummaryDTO {
     private final String roomCode;
     private final LocalDateTime createdAt;
     private final LocalDateTime expiresAt;
+    private final String status;
 }

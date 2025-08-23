@@ -15,7 +15,7 @@ import lombok.Data;
 @Entity
 @SuppressWarnings("unused")
 @Data
-public class FileTransfer {
+public class File {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,6 +26,8 @@ public class FileTransfer {
     private LocalDateTime sentAt;
     @Column(nullable = false)
     private String status; // e.g., "SENT", "RECEIVED"
+
+    private String filePath;
 
     // relationships
     @ManyToOne(fetch = FetchType.LAZY)
