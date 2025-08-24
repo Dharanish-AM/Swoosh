@@ -18,7 +18,11 @@ public class FileController {
         return fileTransferService.getFileTransferById(id);
     }
 
-    public FileResponseDTO createFileTransfer(FileRequestDTO fileTransferDTO) {
+    public FileResponseDTO createFile(FileRequestDTO fileTransferDTO) {
         return fileTransferService.createFileTransfer(fileTransferDTO);
+    }
+
+    public void deleteFile(Long id) {
+        fileTransferService.deleteFileTransfer(id);
     }
 }

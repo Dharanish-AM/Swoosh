@@ -74,4 +74,9 @@ public class FileService {
             throw new RuntimeException("Could not store file: " + e.getMessage(), e);
         }
     }
+
+    public void deleteFileTransfer(Long id) {
+        fileTransferRepository.deleteById(id);
+    }
+
 }
