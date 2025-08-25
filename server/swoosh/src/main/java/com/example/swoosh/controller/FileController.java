@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.swoosh.dto.filetransfer.FileRequestDTO;
-import com.example.swoosh.dto.filetransfer.FileResponseDTO;
+import com.example.swoosh.dto.file.FileRequestDTO;
+import com.example.swoosh.dto.file.FileResponseDTO;
 import com.example.swoosh.service.FileService;
 
 @RestController
-@RequestMapping("/api/file-transfer")
+@RequestMapping("/api/file")
 public class FileController {
     @Autowired
     private FileService fileTransferService;
@@ -18,8 +18,8 @@ public class FileController {
         return fileTransferService.getFileTransferById(id);
     }
 
-    public FileResponseDTO createFile(FileRequestDTO fileTransferDTO) {
-        return fileTransferService.createFileTransfer(fileTransferDTO);
+    public FileResponseDTO sendFile(FileRequestDTO fileTransferDTO) {
+        return fileTransferService.sendFile(fileTransferDTO);
     }
 
     public void deleteFile(Long id) {

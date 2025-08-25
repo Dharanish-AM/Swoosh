@@ -35,7 +35,6 @@ public class Room {
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
 
-    // ✅ New field for room status
     @Enumerated(EnumType.STRING)
     private RoomStatus status;
 

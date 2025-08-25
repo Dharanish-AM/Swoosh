@@ -1,4 +1,4 @@
-package com.example.swoosh.dto.filetransfer;
+package com.example.swoosh.dto.file;
 
 import com.example.swoosh.dto.room.RoomMapper;
 import com.example.swoosh.model.File;

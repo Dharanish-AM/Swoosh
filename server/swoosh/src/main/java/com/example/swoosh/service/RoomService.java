@@ -36,11 +36,16 @@ public class RoomService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
+        Room existingRoom = roomRepository.findByUserIdAndStatus(userId, Room.RoomStatus.ACTIVE);
+        if (existingRoom != null) {
+            return RoomMapper.toResponseDTO(existingRoom);
+        }
+
         String roomCode = UUID.randomUUID().toString().substring(0, 6);
 
         LocalDateTime createdAt = LocalDateTime.now();
 
-        LocalDateTime expiresAt = createdAt.plusHours(2);
+        LocalDateTime expiresAt = createdAt.plusHours(1);
 
         Room room = new Room();
         room.setRoomCode(roomCode);
@@ -49,7 +54,7 @@ public class RoomService {
         room.setUser(user); // owning side
         room.setTransfers(new ArrayList<>());
 
-        Room savedRoom = roomRepository.save(room); 
+        Room savedRoom = roomRepository.save(room);
         return RoomMapper.toResponseDTO(savedRoom);
     }
 

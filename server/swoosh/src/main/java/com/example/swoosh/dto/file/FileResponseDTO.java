@@ -1,22 +1,22 @@
-package com.example.swoosh.dto.filetransfer;
+package com.example.swoosh.dto.file;
 
 import java.time.LocalDateTime;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import com.example.swoosh.dto.room.RoomSummaryDTO;
+import com.example.swoosh.model.File;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class FileRequestDTO {
+public class FileResponseDTO {
     private Long id;
     private String fileName;
     private Long fileSize;
-    private MultipartFile file;
+    private String filePath;
     private LocalDateTime sentAt;
-    private String status;
+    private File.FileStatus status;
     private RoomSummaryDTO room;
 }
+ 

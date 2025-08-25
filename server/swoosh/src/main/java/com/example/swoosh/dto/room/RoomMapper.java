@@ -2,15 +2,18 @@ package com.example.swoosh.dto.room;
 
 import java.util.List;
 
+import com.example.swoosh.dto.file.FileSummaryDTO;
+import com.example.swoosh.model.File;
 import com.example.swoosh.model.Room;
 
 public class RoomMapper {
         public static RoomResponseDTO toResponseDTO(Room room) {
-                List<FileTransferSummaryDTO> fileTransfers = room.getTransfers().stream()
-                                .map(transfer -> new FileTransferSummaryDTO(
+                List<FileSummaryDTO> fileTransfers = room.getTransfers().stream()
+                                .map(transfer -> new FileSummaryDTO(
                                                 transfer.getId(),
                                                 transfer.getFileName(),
                                                 transfer.getFileSize(),
+                                                transfer.getFilePath(),
                                                 transfer.getSentAt(),
                                                 transfer.getStatus()))
                                 .toList();
@@ -45,11 +48,24 @@ public class RoomMapper {
                         return null;
                 }
 
+                List<File> files = room.getTransfers().stream().toList();
+                List<FileSummaryDTO> fileSummaries = files.stream()
+                                .map(file -> new FileSummaryDTO(
+                                                file.getId(),
+                                                file.getFileName(),
+                                                file.getFileSize(),
+                                                file.getFilePath(),
+                                                file.getSentAt(),
+                                                file.getStatus()))
+                                .toList();
+
                 return new RoomSummaryDTO(
                                 room.getId(),
                                 room.getRoomCode(),
                                 room.getCreatedAt(),
                                 room.getExpiresAt(),
-                                room.getStatus());
+                                room.getStatus(),
+                                fileSummaries
+                                );
         }
 }

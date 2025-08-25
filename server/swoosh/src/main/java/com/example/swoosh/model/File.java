@@ -25,7 +25,7 @@ public class File {
     private long fileSize;
     private LocalDateTime sentAt;
     @Column(nullable = false)
-    private String status; // e.g., "SENT", "RECEIVED"
+    private FileStatus status; 
 
     private String filePath;
 
@@ -33,4 +33,12 @@ public class File {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
+
+    public static enum FileStatus {
+        FAILED,
+        CANCELED,
+        PENDING,
+        IN_PROGRESS,
+        COMPLETED
+    }
 }

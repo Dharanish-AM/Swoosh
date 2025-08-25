@@ -1,21 +1,21 @@
-package com.example.swoosh.dto.filetransfer;
+package com.example.swoosh.dto.file;
 
 import java.time.LocalDateTime;
 
-import com.example.swoosh.dto.room.RoomSummaryDTO;
+import com.example.swoosh.model.File;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public class FileResponseDTO {
+@NoArgsConstructor
+public class FileSummaryDTO {
     private Long id;
     private String fileName;
     private Long fileSize;
     private String filePath;
     private LocalDateTime sentAt;
-    private String status;
-    private RoomSummaryDTO room;
+    private File.FileStatus status;
 }
- 

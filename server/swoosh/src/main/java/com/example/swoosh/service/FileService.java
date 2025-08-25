@@ -11,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.swoosh.dto.filetransfer.FileRequestDTO;
-import com.example.swoosh.dto.filetransfer.FileResponseDTO;
+import com.example.swoosh.dto.file.FileRequestDTO;
+import com.example.swoosh.dto.file.FileResponseDTO;
 import com.example.swoosh.dto.room.RoomMapper;
 import com.example.swoosh.model.File;
 import com.example.swoosh.model.Room;
@@ -31,7 +31,8 @@ public class FileService {
         return null;
     }
 
-    public FileResponseDTO createFileTransfer(FileRequestDTO fileTransferDTO) {
+    public FileResponseDTO sendFile(FileRequestDTO fileTransferDTO, Long userId, Long roomId) {
+
         MultipartFile multipartFile = fileTransferDTO.getFile();
         if (multipartFile == null || multipartFile.isEmpty()) {
             throw new IllegalArgumentException("File must not be null or empty");
@@ -47,7 +48,6 @@ public class FileService {
             Path filePath = uploadPath.resolve(originalFilename);
             Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            //find room from request room id
             Room room = roomRepository.findById(roomId)
                     .orElseThrow(() -> new IllegalArgumentException("Invalid room ID"));
 
@@ -55,7 +55,7 @@ public class FileService {
             fileEntity.setFileName(originalFilename);
             fileEntity.setFileSize(multipartFile.getSize());
             fileEntity.setSentAt(LocalDateTime.now());
-            fileEntity.setStatus("SENT");
+            fileEntity.setStatus(File.FileStatus.COMPLETED);
             fileEntity.setFilePath(filePath.toString());
             fileEntity.setRoom(room);
 
