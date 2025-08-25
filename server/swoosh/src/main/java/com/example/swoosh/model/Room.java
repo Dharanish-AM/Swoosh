@@ -55,7 +55,7 @@ public class Room {
     private List<User> receivers = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<File> transfers = new ArrayList<>();
+    private List<File> files = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {

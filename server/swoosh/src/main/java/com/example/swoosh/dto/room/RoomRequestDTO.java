@@ -20,6 +20,6 @@ public class RoomRequestDTO {
     private LocalDateTime createdAt;
     private final Room.RoomStatus status;
     private LocalDateTime expiresAt;
-    private List<File> transfers = new ArrayList<>();
+    private List<File> files = new ArrayList<>();
 
 }

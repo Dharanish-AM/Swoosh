@@ -1,6 +1,8 @@
 package com.example.swoosh.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +27,16 @@ public class RoomController {
     @PostMapping
     public RoomResponseDTO createRoom(@RequestParam Long userId) {
         return roomService.createRoom(userId);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteRoom(@RequestParam Long userId, @RequestParam Long roomId) {
+        boolean res = roomService.deleteRoom(userId, roomId);
+        if (res) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

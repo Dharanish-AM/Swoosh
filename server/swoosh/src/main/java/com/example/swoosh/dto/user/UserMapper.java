@@ -21,7 +21,7 @@ public class UserMapper {
     public static UserResponseDTO toResponseDTO(User user) {
         List<RoomSummaryDTO> roomDTOs = user.getRooms().stream()
                 .map(roomEach -> {
-                    List<FileSummaryDTO> fileSummaries = roomEach.getTransfers().stream()
+                    List<FileSummaryDTO> fileSummaries = roomEach.getFiles().stream()
                             .map(file -> new FileSummaryDTO(
                                     file.getId(),
                                     file.getFileName(),

@@ -8,7 +8,7 @@ import com.example.swoosh.model.Room;
 
 public class RoomMapper {
         public static RoomResponseDTO toResponseDTO(Room room) {
-                List<FileSummaryDTO> fileTransfers = room.getTransfers().stream()
+                List<FileSummaryDTO> fileTransfers = room.getFiles().stream()
                                 .map(transfer -> new FileSummaryDTO(
                                                 transfer.getId(),
                                                 transfer.getFileName(),
@@ -40,7 +40,7 @@ public class RoomMapper {
                 room.setSender(roomRequestDTO.getSender());
                 room.setCreatedAt(roomRequestDTO.getCreatedAt());
                 room.setExpiresAt(roomRequestDTO.getExpiresAt());
-                room.setTransfers(roomRequestDTO.getTransfers());
+                room.setFiles(roomRequestDTO.getFiles());
                 return room;
         }
 
@@ -49,7 +49,7 @@ public class RoomMapper {
                         return null;
                 }
 
-                List<File> files = room.getTransfers().stream().toList();
+                List<File> files = room.getFiles().stream().toList();
                 List<FileSummaryDTO> fileSummaries = files.stream()
                                 .map(file -> new FileSummaryDTO(
                                                 file.getId(),

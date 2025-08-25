@@ -58,6 +58,7 @@ public class FileService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid file ID or File not found"));
     }
 
+    @SuppressWarnings("unused")
     public FileResponseDTO sendFile(FileRequestDTO fileTransferDTO, Long senderId, Long roomId) {
         if (senderId == null || roomId == null) {
             throw new IllegalArgumentException("Sender ID and Room ID must not be null");
@@ -73,7 +74,7 @@ public class FileService {
         if (multipartFile == null || multipartFile.isEmpty()) {
             throw new IllegalArgumentException("File must not be null or empty");
         }
-        String uploadDir = "uploads/" + "user"+senderId.toString() + "/" + "room"+roomId.toString();
+        String uploadDir = "uploads/" + "user" + senderId.toString() + "/" + "room" + roomId.toString();
         Path uploadPath = Paths.get(uploadDir);
         try {
             if (!Files.exists(uploadPath)) {
@@ -122,7 +123,7 @@ public class FileService {
             File file = fileTransferRepository.findById(fileId)
                     .orElseThrow(() -> new IllegalArgumentException("Invalid file ID or File not found"));
             String fileName = file.getFileName();
-            Path filePath = Paths.get("uploads/" + senderId + "/" + roomId).resolve(file.getFileName());
+            Path filePath = Paths.get("uploads/" + "user" + senderId + "/" + "room" + roomId).resolve(file.getFileName());
             if (!Files.exists(filePath)) {
                 return ResponseEntity.notFound().build();
             }
@@ -158,7 +159,7 @@ public class FileService {
         File file = fileTransferRepository.findById(fileId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid file ID or File not found"));
 
-        Path path = Paths.get(file.getFilePath()).toAbsolutePath(); 
+        Path path = Paths.get(file.getFilePath()).toAbsolutePath();
         System.out.println("Deleting file at: " + path);
         System.out.println("File exists: " + Files.exists(path));
 
