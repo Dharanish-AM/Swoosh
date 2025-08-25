@@ -16,6 +16,7 @@ public class FileSummaryDTO {
     private String fileName;
     private Long fileSize;
     private String filePath;
+    private String fileType;
     private LocalDateTime sentAt;
     private File.FileStatus status;
 }

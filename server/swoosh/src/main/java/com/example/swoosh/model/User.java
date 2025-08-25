@@ -38,7 +38,7 @@ public class User {
     private LocalDateTime registeredAt;
 
     // Relationships
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Room> rooms = new ArrayList<>();
 
     // Getters & Setters

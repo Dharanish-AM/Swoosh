@@ -2,7 +2,6 @@ package com.example.swoosh.dto.file;
 
 import java.time.LocalDateTime;
 
-import com.example.swoosh.dto.room.RoomSummaryDTO;
 import com.example.swoosh.model.File;
 
 import lombok.AllArgsConstructor;
@@ -15,8 +14,9 @@ public class FileResponseDTO {
     private String fileName;
     private Long fileSize;
     private String filePath;
+     private String fileType;
     private LocalDateTime sentAt;
     private File.FileStatus status;
-    private RoomSummaryDTO room;
+    private Long roomId;
 }
  

@@ -16,7 +16,7 @@ import lombok.Data;
 public class RoomRequestDTO {
     private Long id;
     private String roomCode;
-    private User user;
+    private User sender;
     private LocalDateTime createdAt;
     private final Room.RoomStatus status;
     private LocalDateTime expiresAt;

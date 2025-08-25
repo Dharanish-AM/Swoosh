@@ -14,14 +14,15 @@ public class RoomMapper {
                                                 transfer.getFileName(),
                                                 transfer.getFileSize(),
                                                 transfer.getFilePath(),
+                                                transfer.getFileType(),
                                                 transfer.getSentAt(),
                                                 transfer.getStatus()))
                                 .toList();
 
                 UserSummaryDTO userSummary = new UserSummaryDTO(
-                                room.getUser().getId(),
-                                room.getUser().getName(),
-                                room.getUser().getEmail());
+                                room.getSender().getId(),
+                                room.getSender().getName(),
+                                room.getSender().getEmail());
 
                 return new RoomResponseDTO(
                                 room.getId(),
@@ -36,7 +37,7 @@ public class RoomMapper {
         public static Room toEntity(RoomRequestDTO roomRequestDTO) {
                 Room room = new Room();
                 room.setRoomCode(roomRequestDTO.getRoomCode());
-                room.setUser(roomRequestDTO.getUser());
+                room.setSender(roomRequestDTO.getSender());
                 room.setCreatedAt(roomRequestDTO.getCreatedAt());
                 room.setExpiresAt(roomRequestDTO.getExpiresAt());
                 room.setTransfers(roomRequestDTO.getTransfers());
@@ -55,6 +56,7 @@ public class RoomMapper {
                                                 file.getFileName(),
                                                 file.getFileSize(),
                                                 file.getFilePath(),
+                                                file.getFileType(),
                                                 file.getSentAt(),
                                                 file.getStatus()))
                                 .toList();

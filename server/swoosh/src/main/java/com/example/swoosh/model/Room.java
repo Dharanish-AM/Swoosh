@@ -13,6 +13,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
@@ -31,17 +33,26 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String roomCode; // pairing code
+    private String roomCode; 
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
 
     @Enumerated(EnumType.STRING)
     private RoomStatus status;
 
-    // relationships
+    // Sender: one user
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "sender_id", nullable = false)
+    private User sender;
+
+    // Receivers: multiple users
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "room_receivers",
+        joinColumns = @JoinColumn(name = "room_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> receivers = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<File> transfers = new ArrayList<>();

@@ -36,7 +36,7 @@ public class RoomService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
-        Room existingRoom = roomRepository.findByUserIdAndStatus(userId, Room.RoomStatus.ACTIVE);
+        Room existingRoom = roomRepository.findBySenderIdAndStatus(userId, Room.RoomStatus.ACTIVE);
         if (existingRoom != null) {
             return RoomMapper.toResponseDTO(existingRoom);
         }
@@ -51,7 +51,7 @@ public class RoomService {
         room.setRoomCode(roomCode);
         room.setCreatedAt(createdAt);
         room.setExpiresAt(expiresAt);
-        room.setUser(user); // owning side
+        room.setSender(user); // owning side
         room.setTransfers(new ArrayList<>());
 
         Room savedRoom = roomRepository.save(room);
