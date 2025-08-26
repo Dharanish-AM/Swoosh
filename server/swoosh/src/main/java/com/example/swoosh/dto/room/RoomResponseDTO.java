@@ -16,7 +16,8 @@ public class RoomResponseDTO {
     private final String roomCode; 
     private final LocalDateTime createdAt;
     private final LocalDateTime expiresAt;
-    private final UserSummaryDTO user;
+    private final UserSummaryDTO sender;
+    private final List<UserSummaryDTO> receivers;
     private final Room.RoomStatus status;
     private final List<FileSummaryDTO> files;
 }

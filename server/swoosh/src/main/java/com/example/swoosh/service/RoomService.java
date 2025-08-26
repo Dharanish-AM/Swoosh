@@ -67,6 +67,30 @@ public class RoomService {
         return RoomMapper.toResponseDTO(savedRoom);
     }
 
+    public RoomResponseDTO joinRoom(Long userId, String roomCode) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+
+        if (roomCode == null) {
+            throw new IllegalArgumentException("Room code must not be null");
+        }
+
+        Room room = roomRepository.findByRoomCode(roomCode);
+
+        if (room == null) {
+            throw new ResourceNotFoundException("Room not found with code: " + roomCode);
+        }
+
+        if (room.getStatus() != Room.RoomStatus.ACTIVE) {
+            throw new IllegalArgumentException("Room is not active");
+        }
+        if (!room.getReceivers().contains(user)) {
+            room.getReceivers().add(user);
+            roomRepository.save(room);
+        }
+        return RoomMapper.toResponseDTO(room);
+    }
+
     public boolean deleteRoom(Long userId, Long roomId) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found with id: " + roomId));

@@ -29,6 +29,11 @@ public class RoomController {
         return roomService.createRoom(userId);
     }
 
+    @PostMapping("/join")
+    public RoomResponseDTO joinRoom(@RequestParam Long userId, @RequestParam String roomCode) {
+        return roomService.joinRoom(userId, roomCode);
+    }
+
     @DeleteMapping
     public ResponseEntity<Void> deleteRoom(@RequestParam Long userId, @RequestParam Long roomId) {
         boolean res = roomService.deleteRoom(userId, roomId);

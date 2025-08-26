@@ -19,17 +19,25 @@ public class RoomMapper {
                                                 transfer.getStatus()))
                                 .toList();
 
-                UserSummaryDTO userSummary = new UserSummaryDTO(
+                UserSummaryDTO sender = new UserSummaryDTO(
                                 room.getSender().getId(),
                                 room.getSender().getName(),
                                 room.getSender().getEmail());
+                                
+                List<UserSummaryDTO> receivers = room.getReceivers().stream()
+                                .map(user -> new UserSummaryDTO(
+                                        user.getId(),
+                                        user.getName(),
+                                        user.getEmail()))
+                                .toList();
 
                 return new RoomResponseDTO(
                                 room.getId(),
                                 room.getRoomCode(),
                                 room.getCreatedAt(),
                                 room.getExpiresAt(),
-                                userSummary,
+                                sender,
+                                receivers,
                                 room.getStatus(),
                                 fileTransfers);
         }
