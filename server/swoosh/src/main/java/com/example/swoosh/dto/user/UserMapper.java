@@ -13,7 +13,7 @@ public class UserMapper {
         User user = new User();
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
-        user.setHashPassword(userDto.getPassword());
+        user.setPassword(userDto.getPassword());
 
         return user;
     }

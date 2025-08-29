@@ -1,12 +1,15 @@
 package com.example.swoosh.service;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,8 @@ import com.example.swoosh.exception.EmailAlreadyExistsException;
 import com.example.swoosh.model.User;
 import com.example.swoosh.repository.UserRepository;
 import com.example.swoosh.security.JwtService;
+
+import io.jsonwebtoken.Claims;
 
 @Service
 public class UserService {
@@ -38,20 +43,23 @@ public class UserService {
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
 
-        // use auth manager
-        Authentication auth = authManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid email"));
 
-        System.out.println("User logged in: " + userDetails);
+        try {
+            Authentication auth = authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, password));
+            UserDetails userDetails = (UserDetails) auth.getPrincipal();
 
-        String token = jwtService.generateToken(userDetails);
+            String token = jwtService.generateToken(userDetails);
 
-        AuthResponseDTO response = new AuthResponseDTO();
-        response.setUser(UserMapper.toResponseDTO(
-                userRepository.findByEmail(userDetails.getUsername())
-                        .orElseThrow(() -> new RuntimeException("User not found"))));
-        response.setToken(token);
-        return response;
+            AuthResponseDTO response = new AuthResponseDTO();
+            response.setToken(token);
+            response.setUserId(user.getId());
+            return response;
+        } catch (BadCredentialsException ex) {
+            throw new BadCredentialsException("Invalid password");
+        }
     }
 
     public void signup(UserRequestDTO user) {
@@ -65,7 +73,7 @@ public class UserService {
         }
         String password = newUser.getPassword();
         String encodedPassword = passwordEncoder.encode(password);
-        newUser.setHashPassword(encodedPassword);
+        newUser.setPassword(encodedPassword);
         newUser.setRegisteredAt(LocalDateTime.now());
         userRepository.save(newUser);
     }
@@ -76,5 +84,21 @@ public class UserService {
 
         UserResponseDTO response = UserMapper.toResponseDTO(user);
         return response;
+    }
+
+    public UserResponseDTO verifyToken(String token) {
+        if (token == null || token.isEmpty()) {
+            throw new RuntimeException("Token is missing");
+        }
+
+        String email = jwtService.extractUsername(token);
+        if (email == null || jwtService.extractClaim(token, Claims::getExpiration).before(new Date())) {
+            throw new RuntimeException("Invalid or expired token");
+        }
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return UserMapper.toResponseDTO(user);
     }
 }

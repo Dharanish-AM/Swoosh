@@ -1,4 +1,11 @@
 #root {
   display: flex;
   flex: 1;
+
+  --primary-color: #16c47f;
+  --red-color: #f16053;
+  --blue-color: #305c91;
+  --bg-color: #f5fdfa;
+  --accent-color: #ffd65a;
+  --text-color: #305c91;
 }

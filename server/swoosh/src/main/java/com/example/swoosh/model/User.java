@@ -41,36 +41,4 @@ public class User {
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Room> rooms = new ArrayList<>();
 
-    // Getters & Setters
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public LocalDateTime getRegisteredAt() {
-        return registeredAt;
-    }
-
-    public void setRegisteredAt(LocalDateTime registeredAt) {
-        this.registeredAt = registeredAt;
-    }
-
-    public void setHashPassword(String password) {
-        this.password = password;
-    }
-
-    public void addRoom(Room room) {
-        this.rooms.add(room);
-    }
 }
