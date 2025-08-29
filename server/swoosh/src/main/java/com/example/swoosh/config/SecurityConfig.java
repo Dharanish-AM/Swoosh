@@ -31,8 +31,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors() // Enable CORS support
-                .and()
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS with Lambda DSL
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for APIs
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // JWT →
                                                                                                               // stateless
