@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { sendFile } from "../../services/userService";
 import toast from "react-hot-toast";
 import { BounceLoader } from "react-spinners";
+import { Download } from "lucide-react";
 
 export default function Room() {
   const roomId = useParams().id;
@@ -47,26 +48,6 @@ export default function Room() {
       } finally {
         setUploading(false);
       }
-    }
-  };
-
-  const handleViewFile = async (fileId) => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/file/${user.id}/${
-          currentRoom.id
-        }/${fileId}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
-      if (!response.ok) throw new Error("Failed to fetch file");
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      window.open(url, "_blank");
-    } catch (err) {
-      console.error("Error viewing file:", err);
-      toast.error("Failed to view file");
     }
   };
 
@@ -163,14 +144,13 @@ export default function Room() {
             </span>
           </div>
           <div>
-            <span className="font-mono text-lg font-semibold">01:23:45</span>
             <div className="text-[var(--text-color)]/70 text-xs">
               Expires at {currentRoom?.expiresAt}
             </div>
           </div>
           <div>
             <span className="font-semibold">
-              {currentRoom?.onlineCount || 0}
+              {currentRoom?.receivers || 0}
             </span>{" "}
             online
           </div>
@@ -186,23 +166,27 @@ export default function Room() {
           >
             Files
           </a>
-          <a
-            href="#"
-            className="whitespace-nowrap py-4 px-1 border-b-2 border-transparent text-[var(--text-color)]/70 hover:text-[var(--text-color)] hover:border-[var(--accent-color)] text-sm font-medium"
-          >
-            Receivers
-          </a>
-          <a
-            href="#"
-            className="whitespace-nowrap py-4 px-1 border-b-2 border-transparent text-[var(--text-color)]/70 hover:text-[var(--text-color)] hover:border-[var(--accent-color)] text-sm font-medium"
-          >
-            History
-          </a>
+          {currentRoom?.sender?.id === user.id && (
+            <>
+              <a
+                href="#"
+                className="whitespace-nowrap py-4 px-1 border-b-2 border-transparent text-[var(--text-color)]/70 hover:text-[var(--text-color)] hover:border-[var(--accent-color)] text-sm font-medium"
+              >
+                Receivers
+              </a>
+              <a
+                href="#"
+                className="whitespace-nowrap py-4 px-1 border-b-2 border-transparent text-[var(--text-color)]/70 hover:text-[var(--text-color)] hover:border-[var(--accent-color)] text-sm font-medium"
+              >
+                History
+              </a>
+            </>
+          )}
         </nav>
       </div>
 
-      {/* File Upload Area */}
-      {currentRoom?.status !== "EXPIRED" && (
+      {/* File Upload Area - Only for Room Owner */}
+      {currentRoom?.status !== "EXPIRED" && currentRoom?.sender?.id === user.id && (
         <div className="mb-10">
           <label
             htmlFor="file-upload"
@@ -315,49 +299,10 @@ export default function Room() {
                 )}
                 <div className="flex space-x-2 mt-2">
                   <button
-                    onClick={() => handleViewFile(file.id)}
-                    className="flex items-center px-3 py-1 rounded-md bg-[var(--blue-color)] text-white text-xs hover:opacity-90"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 mr-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                    View
-                  </button>
-                  <button
                     onClick={() => handleDownloadFile(file.id, file.fileName)}
-                    className="flex items-center px-3 py-1 rounded-md bg-[var(--red-color)] text-white text-xs hover:opacity-90"
+                    className="flex items-center px-3.5 py-2 rounded-md bg-[var(--blue-color)] text-white text-sm hover:opacity-90"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 mr-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"
-                      />
-                    </svg>
+                    <Download size={17} className="mr-2" />
                     Download
                   </button>
                 </div>

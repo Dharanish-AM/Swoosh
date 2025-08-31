@@ -43,11 +43,11 @@ export const joinRoom = async (userId, roomCode, dispatch) => {
     }
     return response;
   } catch (error) {
-    console.error("Join room error:", error);
-    if (error.response && error.response.data) {
-      throw new Error(error.response.data.message || "Join room failed");
-    }
-    throw new Error("Join room failed");
+    const message =
+      error.response?.data ||
+      "Join room failed";
+      console.log(message)
+    throw new Error(message);
   }
 };
 

@@ -12,7 +12,8 @@ import { useEffect, useState } from "react";
 import { verifyToken } from "./services/authService";
 import { getUser } from "./services/userService";
 import Room from "./pages/main/Room";
-import {PacmanLoader}  from "react-spinners";
+import { PacmanLoader } from "react-spinners";
+import JoinRoomPage from "./pages/main/JoinRoomPage";
 
 function App() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
@@ -67,6 +68,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/room/:id" element={<Room />} />
+            <Route path="/join/:roomCode" element={<JoinRoomPage />} />
             <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         )}

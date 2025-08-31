@@ -74,7 +74,7 @@ public class RoomService {
             throw new IllegalArgumentException("Room code must not be null");
         }
 
-        Room room = roomRepository.findByRoomCode(roomCode);
+        Room room = roomRepository.findByRoomCode(roomCode.toLowerCase());
 
         if (room == null) {
             throw new ResourceNotFoundException("Room not found with code: " + roomCode);
@@ -84,12 +84,12 @@ public class RoomService {
             throw new IllegalArgumentException("Room is not active");
         }
         Integer maxReceivers = room.getMaxReceivers();
-        if (room.getReceivers().size() >= maxReceivers) {
-            throw new IllegalArgumentException("Room is full");
-        }
         if (room.getReceivers().contains(user)) {
             throw new IllegalArgumentException("User already joined this room");
         } else {
+            if (room.getReceivers().size() >= maxReceivers) {
+                throw new IllegalArgumentException("Room is full");
+            }
             room.getReceivers().add(user);
             roomRepository.save(room);
             return RoomMapper.toResponseDTO(room);
@@ -102,29 +102,41 @@ public class RoomService {
         if (!room.getSender().getId().equals(userId)) {
             throw new IllegalArgumentException("User is not the owner of the room");
         }
+
         List<File> files = room.getFiles();
         java.nio.file.Path parentFolder = null;
         if (!files.isEmpty()) {
             String firstFilePath = files.get(0).getFilePath();
-            java.nio.file.Path filePathObj = Paths.get(firstFilePath);
-            parentFolder = filePathObj.getParent();
+            parentFolder = Paths.get(firstFilePath).getParent();
         }
+
+        // Delete all files
         for (File file : files) {
-            String filePath = file.getFilePath();
             try {
-                Files.deleteIfExists(Paths.get(filePath));
+                Files.deleteIfExists(Paths.get(file.getFilePath()));
             } catch (IOException | SecurityException e) {
-                throw new RuntimeException("Error deleting file: " + filePath, e);
+                throw new RuntimeException("Error deleting file: " + file.getFilePath(), e);
             }
             fileRepository.delete(file);
         }
-        if (parentFolder != null) {
+
+        // Delete parent folder recursively if exists
+        if (parentFolder != null && Files.exists(parentFolder)) {
             try {
-                Files.deleteIfExists(parentFolder);
-            } catch (IOException | SecurityException e) {
-                throw new RuntimeException("Error deleting parent folder: " + parentFolder, e);
+                Files.walk(parentFolder)
+                        .sorted(java.util.Comparator.reverseOrder())
+                        .forEach(path -> {
+                            try {
+                                Files.delete(path);
+                            } catch (IOException e) {
+                                throw new RuntimeException("Error deleting path: " + path, e);
+                            }
+                        });
+            } catch (IOException e) {
+                throw new RuntimeException("Error walking parent folder: " + parentFolder, e);
             }
         }
+
         roomRepository.delete(room);
         return true;
     }

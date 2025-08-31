@@ -70,6 +70,10 @@ public class FileService {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid room ID or Room not found"));
 
+        if(!room.getSender().getId().equals(senderId)) {
+            throw new IllegalArgumentException("User is not the sender of the room");
+        }
+
         MultipartFile multipartFile = fileTransferDTO.getFile();
         if (multipartFile == null || multipartFile.isEmpty()) {
             throw new IllegalArgumentException("File must not be null or empty");

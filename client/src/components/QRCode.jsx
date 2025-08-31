@@ -1,10 +1,12 @@
 import { X, Clipboard, Download, Share2 } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
 import QRCodeLib from "react-qr-code";
+import { toast } from "react-hot-toast";
 
 export default function QRCode({ room, setShowQr }) {
   const [timeLeft, setTimeLeft] = useState("");
   const [copied, setCopied] = useState(false);
+  const shareUrl = `${window.location.origin}/join/${room.roomCode.toUpperCase()}`;
   const qrRef = useRef(null);
 
   useEffect(() => {
@@ -73,12 +75,22 @@ export default function QRCode({ room, setShowQr }) {
     const shareData = {
       title: `Join Room ${room.roomName}`,
       text: `Join my room "${room.roomName}" using this code: ${room.roomCode}`,
-      url: `https://swoosh.app/join/${room.roomCode}`,
+      url: shareUrl,
     };
+
     if (navigator.share) {
-      navigator.share(shareData).catch(() => {});
+      // Web Share API supported
+      navigator
+        .share(shareData)
+        .catch((err) => {
+          console.error("Share failed:", err);
+          toast.error("Sharing failed. URL copied to clipboard.");
+          copyToClipboard(shareUrl);
+        });
     } else {
-      copyToClipboard(shareData.url);
+      // Fallback: copy to clipboard for all other browsers
+      copyToClipboard(shareUrl);
+      toast.success("Room URL copied to clipboard");
     }
   };
 
@@ -108,7 +120,7 @@ export default function QRCode({ room, setShowQr }) {
           ref={qrRef}
           className="bg-gray-50 rounded-xl border border-gray-200 flex justify-center items-center p-6"
         >
-          <QRCodeLib value={room?.roomCode?.toUpperCase()  || "No Code"} size={192} />
+          <QRCodeLib value={shareUrl  || "No Code"} size={192} />
         </div>
 
         <div
@@ -133,9 +145,11 @@ export default function QRCode({ room, setShowQr }) {
 
         <div className="flex flex-col gap-1">
           <span className="text-gray-400 text-xs">Share URL</span>
-          <div className="font-mono text-[#305C91] break-all cursor-pointer select-all">
-            https://swoosh.app/join/{room?.roomCode?.toUpperCase() || ""}
-          </div>
+          <a onClick={()=>{
+            window.open(shareUrl, "_blank");
+          }} className="font-mono text-[#305C91] break-all cursor-pointer select-all">
+            {shareUrl}
+          </a>
         </div>
 
         <div className="flex gap-4 mt-4">
