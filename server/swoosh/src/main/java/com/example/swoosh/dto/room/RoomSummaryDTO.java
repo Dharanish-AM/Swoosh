@@ -19,6 +19,7 @@ public class RoomSummaryDTO {
     private Integer maxReceivers;
     private final String roomCode;
     private final UserSummaryDTO sender;
+    private final List<UserSummaryDTO> receivers;
     private final LocalDateTime createdAt;
     private final LocalDateTime expiresAt;
     private final Room.RoomStatus status;

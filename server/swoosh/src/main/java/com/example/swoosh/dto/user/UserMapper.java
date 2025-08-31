@@ -31,6 +31,12 @@ public class UserMapper {
                                                                         file.getSentAt(),
                                                                         file.getStatus()))
                                                         .toList();
+                                        List<UserSummaryDTO> receivers = roomEach.getReceivers().stream()
+                                                        .map(userCurrent -> new UserSummaryDTO(
+                                                                        userCurrent.getId(),
+                                                                        userCurrent.getName(),
+                                                                        userCurrent.getEmail()))
+                                                        .toList();
 
                                         return new RoomSummaryDTO(
                                                         roomEach.getId(),
@@ -42,6 +48,7 @@ public class UserMapper {
                                                                         roomEach.getSender().getId(),
                                                                         roomEach.getSender().getName(),
                                                                         roomEach.getSender().getEmail()),
+                                                        receivers,
                                                         roomEach.getCreatedAt(),
                                                         roomEach.getExpiresAt(),
                                                         roomEach.getStatus(),
@@ -62,6 +69,13 @@ public class UserMapper {
                                                                         file.getStatus()))
                                                         .toList();
 
+                                        List<UserSummaryDTO> receivers = roomEach.getReceivers().stream()
+                                                        .map(userCurrent -> new UserSummaryDTO(
+                                                                        userCurrent.getId(),
+                                                                        userCurrent.getName(),
+                                                                        userCurrent.getEmail()))
+                                                        .toList();
+
                                         return new RoomSummaryDTO(
                                                         roomEach.getId(),
                                                         roomEach.getRoomName(),
@@ -72,6 +86,7 @@ public class UserMapper {
                                                                         roomEach.getSender().getId(),
                                                                         roomEach.getSender().getName(),
                                                                         roomEach.getSender().getEmail()),
+                                                        receivers,
                                                         roomEach.getCreatedAt(),
                                                         roomEach.getExpiresAt(),
                                                         roomEach.getStatus(),

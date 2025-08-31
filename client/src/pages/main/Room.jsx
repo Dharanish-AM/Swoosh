@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FileIcon, defaultStyles } from "react-file-icon";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { sendFile } from "../../services/userService";
+import { removeFile, sendFile } from "../../services/userService";
 import toast from "react-hot-toast";
 import { BounceLoader } from "react-spinners";
 import { Download } from "lucide-react";
@@ -81,6 +81,22 @@ export default function Room() {
     }
   };
 
+  const handleRemoveFile = async (fileId) => {
+    if (!currentRoom || Number(currentRoom.sender?.id) !== Number(user.id)) {
+      toast.error("Only the room owner can remove files");
+      return;
+    }
+    try {
+      const response = await removeFile(user.id, currentRoom.id, fileId, dispatch);
+      if(response.status == 200) {
+        toast.success("File removed successfully");
+      }
+    } catch (error) {
+      console.error("Error removing file:", error);
+      toast.error("Failed to remove file");
+    }
+  };
+
   if (uploading) {
     return (
       <div className="flex w-screen justify-center items-center h-screen">
@@ -127,6 +143,25 @@ export default function Room() {
           <p className="text-[var(--text-color)]/80 max-w-xl">
             {currentRoom?.roomDescription}
           </p>
+
+          {/* Receivers Section */}
+          <div className="mt-6">
+            <h3 className="text-lg font-semibold text-[var(--text-color)] mb-2">Receivers</h3>
+            <ul className="list-disc list-inside space-y-1 text-[var(--text-color)]">
+              {currentRoom?.receiversList && currentRoom.receiversList.length > 0 ? (
+                currentRoom.receiversList.map((receiver, idx) => (
+                  <li key={idx} className="text-sm">
+                    <span>{receiver.name}</span>
+                    {receiver.email && (
+                      <span className="text-[var(--text-color)]/70 ml-2">({receiver.email})</span>
+                    )}
+                  </li>
+                ))
+              ) : (
+                <li className="text-sm text-[var(--text-color)]/70">No receivers found.</li>
+              )}
+            </ul>
+          </div>
         </div>
         <div className="flex flex-col items-end space-y-3 text-sm text-[var(--text-color)]">
           <div className="flex items-center space-x-2">
@@ -149,9 +184,7 @@ export default function Room() {
             </div>
           </div>
           <div>
-            <span className="font-semibold">
-              {currentRoom?.receivers || 0}
-            </span>{" "}
+            <span className="font-semibold">{currentRoom?.receivers || 0}</span>{" "}
             online
           </div>
         </div>
@@ -166,7 +199,7 @@ export default function Room() {
           >
             Files
           </a>
-          {currentRoom?.sender?.id === user.id && (
+          {Number(currentRoom?.sender?.id) === Number(user.id) && (
             <>
               <a
                 href="#"
@@ -186,48 +219,49 @@ export default function Room() {
       </div>
 
       {/* File Upload Area - Only for Room Owner */}
-      {currentRoom?.status !== "EXPIRED" && currentRoom?.sender?.id === user.id && (
-        <div className="mb-10">
-          <label
-            htmlFor="file-upload"
-            className="relative flex flex-col items-center justify-center border-4 border-dashed border-gray-300 rounded-xl h-48 cursor-pointer hover:border-[var(--primary-color)] transition-colors"
-          >
-            <div className="text-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="mx-auto h-12 w-12 text-[var(--text-color)] mb-3"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M7 16V4a1 1 0 011-1h8a1 1 0 011 1v12M7 16h10M7 16l-4 4m0 0l4 4m-4-4h18"
-                />
-              </svg>
-              <p className="text-[var(--text-color)] mb-2">
-                Drag & drop files here
-              </p>
-              <button
-                type="button"
-                className="inline-block px-6 py-2 border border-gray-300 rounded-md text-[var(--text-color)] hover:bg-gray-100 transition"
-                onClick={() => document.getElementById("file-upload").click()}
-              >
-                Choose Files
-              </button>
-            </div>
-            <input
-              id="file-upload"
-              type="file"
-              className="hidden"
-              multiple
-              onChange={handleFileUpload}
-            />
-          </label>
-        </div>
-      )}
+      {currentRoom?.status !== "EXPIRED" &&
+        Number(currentRoom?.sender?.id) === Number(user.id) && (
+          <div className="mb-10">
+            <label
+              htmlFor="file-upload"
+              className="relative flex flex-col items-center justify-center border-4 border-dashed border-gray-300 rounded-xl h-48 cursor-pointer hover:border-[var(--primary-color)] transition-colors"
+            >
+              <div className="text-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="mx-auto h-12 w-12 text-[var(--text-color)] mb-3"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M7 16V4a1 1 0 011-1h8a1 1 0 011 1v12M7 16h10M7 16l-4 4m0 0l4 4m-4-4h18"
+                  />
+                </svg>
+                <p className="text-[var(--text-color)] mb-2">
+                  Drag & drop files here
+                </p>
+                <button
+                  type="button"
+                  className="inline-block px-6 py-2 border border-gray-300 rounded-md text-[var(--text-color)] hover:bg-gray-100 transition"
+                  onClick={() => document.getElementById("file-upload").click()}
+                >
+                  Choose Files
+                </button>
+              </div>
+              <input
+                id="file-upload"
+                type="file"
+                className="hidden"
+                multiple
+                onChange={handleFileUpload}
+              />
+            </label>
+          </div>
+        )}
 
       {/* Shared Files List */}
       <div>
@@ -305,6 +339,14 @@ export default function Room() {
                     <Download size={17} className="mr-2" />
                     Download
                   </button>
+                  {Number(currentRoom?.sender?.id) === Number(user.id) && (
+                    <button
+                      onClick={() => handleRemoveFile(file.id)}
+                      className="flex items-center px-3.5 py-2 rounded-md bg-[var(--red-color)] text-white text-sm hover:opacity-90"
+                    >
+                      Remove
+                    </button>
+                  )}
                 </div>
               </div>
             </li>

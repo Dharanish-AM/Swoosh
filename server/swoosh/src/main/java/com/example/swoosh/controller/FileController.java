@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,10 +42,10 @@ public class FileController {
         return fileTransferService.serveFile(senderId, roomId, fileId);
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteFile(@RequestParam Long senderId, @RequestParam Long roomId, @RequestParam Long fileId) {
+    @DeleteMapping("/{userId}/{roomId}/{fileId}")
+    public ResponseEntity<Void> deleteFile(@PathVariable Long userId, @PathVariable Long roomId, @PathVariable Long fileId) {
         try {
-            boolean deleted = fileTransferService.deleteFileTransfer(senderId, roomId, fileId);
+            boolean deleted = fileTransferService.deleteFileTransfer(userId, roomId, fileId);
             if (deleted) {
                 return ResponseEntity.ok().build();
             } else {

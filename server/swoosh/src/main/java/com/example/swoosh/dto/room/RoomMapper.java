@@ -24,12 +24,12 @@ public class RoomMapper {
                                 room.getSender().getId(),
                                 room.getSender().getName(),
                                 room.getSender().getEmail());
-                                
+
                 List<UserSummaryDTO> receivers = room.getReceivers().stream()
                                 .map(user -> new UserSummaryDTO(
-                                        user.getId(),
-                                        user.getName(),
-                                        user.getEmail()))
+                                                user.getId(),
+                                                user.getName(),
+                                                user.getEmail()))
                                 .toList();
 
                 return new RoomResponseDTO(
@@ -45,7 +45,6 @@ public class RoomMapper {
                                 room.getStatus(),
                                 fileTransfers);
         }
-
 
         public static RoomSummaryDTO toSummaryDTO(Room room) {
                 if (room == null) {
@@ -64,6 +63,13 @@ public class RoomMapper {
                                                 file.getStatus()))
                                 .toList();
 
+                List<UserSummaryDTO> receivers = room.getReceivers().stream()
+                                .map(user -> new UserSummaryDTO(
+                                                user.getId(),
+                                                user.getName(),
+                                                user.getEmail()))
+                                .toList();
+
                 return new RoomSummaryDTO(
                                 room.getId(),
                                 room.getRoomName(),
@@ -74,10 +80,10 @@ public class RoomMapper {
                                                 room.getSender().getId(),
                                                 room.getSender().getName(),
                                                 room.getSender().getEmail()),
+                                receivers,
                                 room.getCreatedAt(),
                                 room.getExpiresAt(),
                                 room.getStatus(),
-                                fileSummaries
-                                );
+                                fileSummaries);
         }
 }

@@ -43,10 +43,8 @@ export const joinRoom = async (userId, roomCode, dispatch) => {
     }
     return response;
   } catch (error) {
-    const message =
-      error.response?.data ||
-      "Join room failed";
-      console.log(message)
+    const message = error.response?.data || "Join room failed";
+    console.log(message);
     throw new Error(message);
   }
 };
@@ -116,5 +114,26 @@ export const sendFile = async (userId, roomId, file, dispatch) => {
       throw new Error(error.response.data.message || "Send file failed");
     }
     throw new Error("Send file failed");
+  }
+};
+
+export const removeFile = async (userId, roomId, fileId, dispatch) => {
+  try {
+    const response = await axios.delete(
+      `${API_URL}/file/${userId}/${roomId}/${fileId}`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
+    if (response.status === 200) {
+      await getUser(userId, dispatch);
+    }
+    return response;
+  } catch (error) {
+    console.error("Remove file error:", error);
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.message || "Remove file failed");
+    }
+    throw new Error("Remove file failed");
   }
 };
