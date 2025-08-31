@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.swoosh.dto.room.RoomMapper;
+import com.example.swoosh.dto.room.RoomRequestDTO;
 import com.example.swoosh.dto.room.RoomResponseDTO;
 import com.example.swoosh.exception.ResourceNotFoundException;
 import com.example.swoosh.model.File;
@@ -38,14 +39,14 @@ public class RoomService {
         return RoomMapper.toResponseDTO(room);
     }
 
-    public RoomResponseDTO createRoom(Long userId) {
-        if (userId == null) {
+    public RoomResponseDTO createRoom(RoomRequestDTO request) {
+        if (request.getUserId() == null) {
             throw new IllegalArgumentException("User ID must not be null");
         }
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + request.getUserId()));
 
-        Room existingRoom = roomRepository.findBySenderIdAndStatus(userId, Room.RoomStatus.ACTIVE);
+        Room existingRoom = roomRepository.findBySenderIdAndStatus(request.getUserId(), Room.RoomStatus.ACTIVE);
         if (existingRoom != null) {
             return RoomMapper.toResponseDTO(existingRoom);
         }
@@ -62,6 +63,9 @@ public class RoomService {
         room.setExpiresAt(expiresAt);
         room.setSender(user); // owning side
         room.setFiles(new ArrayList<>());
+        room.setRoomName(request.getRoomName());
+        room.setRoomDescription(request.getRoomDescription());
+        room.setMaxReceivers(request.getMaxReceivers());
 
         Room savedRoom = roomRepository.save(room);
         return RoomMapper.toResponseDTO(savedRoom);
@@ -84,11 +88,17 @@ public class RoomService {
         if (room.getStatus() != Room.RoomStatus.ACTIVE) {
             throw new IllegalArgumentException("Room is not active");
         }
-        if (!room.getReceivers().contains(user)) {
+        Integer maxReceivers = room.getMaxReceivers();
+        if (room.getReceivers().size() >= maxReceivers) {
+            throw new IllegalArgumentException("Room is full");
+        }
+        if (room.getReceivers().contains(user)) {
+            throw new IllegalArgumentException("User already joined this room");
+        } else {
             room.getReceivers().add(user);
             roomRepository.save(room);
+            return RoomMapper.toResponseDTO(room);
         }
-        return RoomMapper.toResponseDTO(room);
     }
 
     public boolean deleteRoom(Long userId, Long roomId) {
@@ -123,4 +133,5 @@ public class RoomService {
         roomRepository.delete(room);
         return true;
     }
+
 }

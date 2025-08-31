@@ -5,9 +5,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class RoomRequestDTO {
+public class JoinRoomRequest {
     private Long userId;
-    private String roomName;
-    private String roomDescription;
-    private Integer maxReceivers;
+    private String roomCode;
+
 }

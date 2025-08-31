@@ -6,10 +6,13 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.swoosh.dto.room.JoinRoomRequest;
+import com.example.swoosh.dto.room.RoomRequestDTO;
 import com.example.swoosh.dto.room.RoomResponseDTO;
 import com.example.swoosh.service.RoomService;
 
@@ -25,13 +28,13 @@ public class RoomController {
     }
 
     @PostMapping
-    public RoomResponseDTO createRoom(@RequestParam Long userId) {
-        return roomService.createRoom(userId);
+    public RoomResponseDTO createRoom(@RequestBody RoomRequestDTO roomRequest) {
+        return roomService.createRoom(roomRequest);
     }
 
     @PostMapping("/join")
-    public RoomResponseDTO joinRoom(@RequestParam Long userId, @RequestParam String roomCode) {
-        return roomService.joinRoom(userId, roomCode);
+    public RoomResponseDTO joinRoom(@RequestBody JoinRoomRequest request) {
+        return roomService.joinRoom(request.getUserId(), request.getRoomCode());
     }
 
     @DeleteMapping

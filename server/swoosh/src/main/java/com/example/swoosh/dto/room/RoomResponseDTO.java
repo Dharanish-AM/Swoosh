@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.example.swoosh.dto.file.FileSummaryDTO;
+import com.example.swoosh.dto.user.UserSummaryDTO;
 import com.example.swoosh.model.Room;
 
 import lombok.AllArgsConstructor;
@@ -13,7 +14,10 @@ import lombok.Data;
 @AllArgsConstructor
 public class RoomResponseDTO {
     private Long id;
-    private final String roomCode; 
+    private String roomName;
+    private String roomDescription;
+    private Integer maxReceivers;
+    private final String roomCode;
     private final LocalDateTime createdAt;
     private final LocalDateTime expiresAt;
     private final UserSummaryDTO sender;
@@ -22,10 +26,3 @@ public class RoomResponseDTO {
     private final List<FileSummaryDTO> files;
 }
 
-@Data
-@AllArgsConstructor
-class UserSummaryDTO {
-    private final Long id;
-    private final String name;
-    private final String email;
-}

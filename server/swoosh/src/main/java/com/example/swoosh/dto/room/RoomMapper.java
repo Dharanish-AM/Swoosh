@@ -3,6 +3,7 @@ package com.example.swoosh.dto.room;
 import java.util.List;
 
 import com.example.swoosh.dto.file.FileSummaryDTO;
+import com.example.swoosh.dto.user.UserSummaryDTO;
 import com.example.swoosh.model.File;
 import com.example.swoosh.model.Room;
 
@@ -33,6 +34,9 @@ public class RoomMapper {
 
                 return new RoomResponseDTO(
                                 room.getId(),
+                                room.getRoomName(),
+                                room.getRoomDescription(),
+                                room.getMaxReceivers(),
                                 room.getRoomCode(),
                                 room.getCreatedAt(),
                                 room.getExpiresAt(),
@@ -42,15 +46,6 @@ public class RoomMapper {
                                 fileTransfers);
         }
 
-        public static Room toEntity(RoomRequestDTO roomRequestDTO) {
-                Room room = new Room();
-                room.setRoomCode(roomRequestDTO.getRoomCode());
-                room.setSender(roomRequestDTO.getSender());
-                room.setCreatedAt(roomRequestDTO.getCreatedAt());
-                room.setExpiresAt(roomRequestDTO.getExpiresAt());
-                room.setFiles(roomRequestDTO.getFiles());
-                return room;
-        }
 
         public static RoomSummaryDTO toSummaryDTO(Room room) {
                 if (room == null) {
@@ -71,7 +66,14 @@ public class RoomMapper {
 
                 return new RoomSummaryDTO(
                                 room.getId(),
+                                room.getRoomName(),
+                                room.getRoomDescription(),
+                                room.getMaxReceivers(),
                                 room.getRoomCode(),
+                                new UserSummaryDTO(
+                                                room.getSender().getId(),
+                                                room.getSender().getName(),
+                                                room.getSender().getEmail()),
                                 room.getCreatedAt(),
                                 room.getExpiresAt(),
                                 room.getStatus(),

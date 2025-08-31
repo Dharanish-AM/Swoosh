@@ -33,7 +33,10 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String roomCode; 
+    private String roomName;
+    private String roomDescription;
+    private Integer maxReceivers;
+    private String roomCode;
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
 
@@ -47,11 +50,7 @@ public class Room {
 
     // Receivers: multiple users
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "room_receivers",
-        joinColumns = @JoinColumn(name = "room_id"),
-        inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    @JoinTable(name = "room_receivers", joinColumns = @JoinColumn(name = "room_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> receivers = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -63,12 +62,11 @@ public class Room {
             createdAt = LocalDateTime.now();
         }
         if (status == null) {
-            status = RoomStatus.ACTIVE; 
+            status = RoomStatus.ACTIVE;
         }
     }
 
-    public static enum RoomStatus {    
+    public static enum RoomStatus {
         ACTIVE, EXPIRED, CLOSED
     }
 }
-    

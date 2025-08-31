@@ -15,7 +15,8 @@ public class UserResponseDTO {
     private final Long id;
     private final String name;
     private final String email;
-    private final List<RoomSummaryDTO> rooms;
+    private final List<RoomSummaryDTO> createdRooms;
+    private final List<RoomSummaryDTO> joinedRooms;
     private final LocalDateTime registeredAt;
 }
 

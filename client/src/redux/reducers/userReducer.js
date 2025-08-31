@@ -2,7 +2,8 @@ const initialState = {
   id: null,
   name: "",
   email: "",
-  rooms: [],
+  createdRooms: [],
+  joinedRooms: [],
   registeredAt: null,
 };
 

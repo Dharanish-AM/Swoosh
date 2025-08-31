@@ -9,3 +9,7 @@
   --accent-color: #ffd65a;
   --text-color: #305c91;
 }
+
+*{
+  font-family: Poppins, sans-serif;
+}

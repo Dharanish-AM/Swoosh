@@ -42,8 +42,8 @@ export default function Signup() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            placeholder="John Doe"
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none  focus:ring-[var(--primary-color)]/30 focus:border-[var(--primary-color)]"
+            placeholder="Enter your name"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none  focus:ring-[var(--primary-color)]/30 focus:border-[var(--primary-color)] text-sm"
           />
         </div>
 
@@ -57,8 +57,8 @@ export default function Signup() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            placeholder="you@example.com"
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none  focus:ring-[var(--primary-color)]/30 focus:border-[var(--primary-color)]"
+            placeholder="Enter your email"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none  focus:ring-[var(--primary-color)]/30 focus:border-[var(--primary-color)] text-sm"
           />
         </div>
 
@@ -72,8 +72,8 @@ export default function Signup() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            placeholder="********"
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none  focus:ring-[var(--primary-color)]/30 focus:border-[var(--primary-color)]"
+            placeholder="Enter your password"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none  focus:ring-[var(--primary-color)]/30 focus:border-[var(--primary-color)] text-sm"
           />
         </div>
 
@@ -87,8 +87,8 @@ export default function Signup() {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
-            placeholder="********"
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none  focus:ring-[var(--primary-color)]/30 focus:border-[var(--primary-color)]"
+            placeholder="Enter your password"
+            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none  focus:ring-[var(--primary-color)]/30 focus:border-[var(--primary-color)] text-sm"
           />
         </div>
 
