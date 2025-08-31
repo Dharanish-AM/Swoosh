@@ -8,35 +8,50 @@ import {
 import Auth from "./pages/auth/Auth";
 import Home from "./pages/main/Home";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { verifyToken } from "./services/authService";
 import { getUser } from "./services/userService";
+import Room from "./pages/main/Room";
+import {PacmanLoader}  from "react-spinners";
 
 function App() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const userId = useSelector((state) => state.auth.userId);
   const token = localStorage.getItem("token");
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (token) {
-      const checkToken = async () => {
+    const runCheck = async () => {
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+      try {
         const response = await verifyToken(token, dispatch);
         if (response.status !== 200) {
-          localStorage.removeItem("token");
-          return false;
+          throw new Error("Token invalid or expired");
         }
-        return true;
-      };
-      const runCheck = async () => {
-        const valid = await checkToken();
-        if (valid && userId) {
+        if (userId) {
           await getUser(userId, dispatch);
         }
-      };
-      runCheck();
-    }
-  }, [dispatch, isAuthenticated, token, userId]);
+      } catch (error) {
+        console.error("Token verification error:", error);
+        localStorage.removeItem("token");
+      } finally {
+        setLoading(false);
+      }
+    };
+    runCheck();
+  }, [dispatch, token, userId]);
+
+  if (loading) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center">
+        <PacmanLoader size={40} speed={1.5} color="var(--primary-color)" />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -51,7 +66,8 @@ function App() {
         ) : (
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="*" element={<Navigate to="/home" />} />
+            <Route path="/room/:id" element={<Room />} />
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         )}
       </Router>

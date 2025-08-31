@@ -46,11 +46,6 @@ public class RoomService {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + request.getUserId()));
 
-        Room existingRoom = roomRepository.findBySenderIdAndStatus(request.getUserId(), Room.RoomStatus.ACTIVE);
-        if (existingRoom != null) {
-            return RoomMapper.toResponseDTO(existingRoom);
-        }
-
         String roomCode = UUID.randomUUID().toString().substring(0, 6);
 
         LocalDateTime createdAt = LocalDateTime.now();

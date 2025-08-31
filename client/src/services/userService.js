@@ -39,7 +39,7 @@ export const joinRoom = async (userId, roomCode, dispatch) => {
       }
     );
     if (response.status === 200) {
-      await getUser(response.data.id, dispatch);
+      await getUser(userId, dispatch);
     }
     return response;
   } catch (error) {
@@ -48,5 +48,73 @@ export const joinRoom = async (userId, roomCode, dispatch) => {
       throw new Error(error.response.data.message || "Join room failed");
     }
     throw new Error("Join room failed");
+  }
+};
+
+export const createRoom = async (userId, roomData, dispatch) => {
+  try {
+    const response = await axios.post(`${API_URL}/room`, roomData, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    if (response.status === 201 || response.status === 200) {
+      await getUser(userId, dispatch);
+    }
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.error("Create room error:", error);
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.message || "Create room failed");
+    }
+    throw new Error("Create room failed");
+  }
+};
+
+export const deleteRoom = async (userId, roomId, dispatch) => {
+  try {
+    const response = await axios.delete(
+      `${API_URL}/room?userId=${userId}&roomId=${roomId}`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
+    if (response.status === 200) {
+      await getUser(userId, dispatch);
+    }
+    return response;
+  } catch (error) {
+    console.error("Delete room error:", error);
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.message || "Delete room failed");
+    }
+    throw new Error("Delete room failed");
+  }
+};
+
+export const sendFile = async (userId, roomId, file, dispatch) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await axios.post(
+      `${API_URL}/file?senderId=${userId}&roomId=${roomId}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    if (response.status === 200) {
+      await getUser(userId, dispatch);
+    }
+    return response;
+  } catch (error) {
+    console.error("Send file error:", error);
+    if (error.response && error.response.data) {
+      throw new Error(error.response.data.message || "Send file failed");
+    }
+    throw new Error("Send file failed");
   }
 };

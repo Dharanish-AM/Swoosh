@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { joinRoom } from "../services/userService";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 
-export default function JoinRoom() {
+export default function JoinRoom({onClose}) {
+  const userId = useSelector((state) => state.user.id);
   const [roomCode, setRoomCode] = useState("");
   const dispatch = useDispatch();
   console.log(roomCode);
@@ -11,8 +12,9 @@ export default function JoinRoom() {
   const handleJoinRoom = async () => {
     try {
       const lowerRoomCode = roomCode.toLowerCase();
-      const response = await joinRoom(lowerRoomCode, dispatch);
+      const response = await joinRoom(userId,lowerRoomCode, dispatch);
       if(response.status === 200){
+        onClose();
         toast.success("Room Joined Successfully!")
       }
       else{
@@ -45,7 +47,8 @@ export default function JoinRoom() {
         <div className="flex gap-4 justify-end">
           <button
             type="button"
-            className="px-5 py-2 rounded-md bg-gray-200 text-gray-700 font-medium hover:bg-gray-300 transition"
+            onClick={onClose}
+            className="px-5 py-2 cursor-pointer rounded-md bg-gray-200 text-gray-700 font-medium hover:bg-gray-300 transition"
           >
             Cancel
           </button>

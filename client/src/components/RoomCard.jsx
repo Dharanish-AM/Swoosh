@@ -10,7 +10,10 @@ import {
   Check,
 } from "lucide-react";
 import QRCode from "./QRCode";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { deleteRoom } from "../services/userService";
+import { useNavigate } from "react-router-dom";
 
 export default function RoomCard({ room }) {
   const [copied, setCopied] = useState(false);
@@ -18,9 +21,9 @@ export default function RoomCard({ room }) {
   const [selectedRoomQR, setSelectedRoomQR] = useState("");
   const [timeLeft, setTimeLeft] = useState("");
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const currentUserId = user.id;
-
-  console.log(room);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(room.roomCode);
@@ -53,6 +56,20 @@ export default function RoomCard({ room }) {
     return () => clearInterval(intervalId);
   }, [room.expiresAt]);
 
+  const handleDelete = async () => {
+    try {
+      const response = await deleteRoom(user.id, room.id, dispatch);
+      if (response.status === 200) {
+        toast.success("Room deleted successfully");
+      } else {
+        toast.error("Failed to delete room. Please try again.");
+      }
+    } catch (error) {
+      console.error("Failed to delete room:", error);
+      toast.error(error.message || "Failed to delete room. Please try again.");
+    }
+  };
+
   return (
     <>
       <div className="bg-white rounded-2xl p-6 flex flex-col gap-4 w-full max-w-lg">
@@ -70,6 +87,12 @@ export default function RoomCard({ room }) {
               ></span>
             </div>
             <p className="text-gray-600 text-sm mt-2">{room.roomDescription}</p>
+            <p className="text-gray-500 text-xs mt-1">
+              Owner:{" "}
+              {room.sender?.name === user.name
+                ? "Me"
+                : room.sender?.name || "Unknown"}
+            </p>
           </div>
           <div className="flex gap-2 items-center">
             <button
@@ -146,6 +169,7 @@ export default function RoomCard({ room }) {
           <div className="flex gap-2">
             <button
               type="button"
+              onClick={handleDelete}
               aria-label="Delete Room"
               className="rounded-xl cursor-pointer px-3 py-1.5 font-semibold text-xs bg-[var(--red-color)] text-white shadow-sm hover:bg-[var(--red-color)]/90 transition-colors duration-200 flex items-center gap-1"
             >
@@ -154,6 +178,9 @@ export default function RoomCard({ room }) {
             </button>
             {room.status !== "EXPIRED" && (
               <button
+              onClick={()=>{
+                navigate(`/room/${room.id}`);
+              }}
                 type="button"
                 disabled={!isActive}
                 className={`rounded-xl cursor-pointer px-3 py-1.5 font-semibold text-xs shadow-sm transition-colors duration-200 ${
