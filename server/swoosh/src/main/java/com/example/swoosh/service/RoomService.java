@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.swoosh.dto.room.RoomMapper;
@@ -93,6 +95,26 @@ public class RoomService {
             room.getReceivers().add(user);
             roomRepository.save(room);
             return RoomMapper.toResponseDTO(room);
+        }
+    }
+
+    public ResponseEntity<String> removeUserFromRoom(Long userId, Long roomId, Long removeUserId) {
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with id: " + roomId));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+
+        if (!user.getId().equals(room.getSender().getId())) {
+            throw new IllegalArgumentException("User is not the owner of the room");
+        }
+
+        boolean removed = room.getReceivers().removeIf(u -> u.getId().equals(removeUserId));
+        if (removed) {
+            roomRepository.save(room);
+            return ResponseEntity.ok("User removed successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User not found in room receivers");
         }
     }
 

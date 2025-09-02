@@ -132,7 +132,7 @@ export default function RoomCard({ room }) {
           <div className="flex items-center gap-1">
             <Users size={16} />
             <span>
-              Members: {room.membersCount ?? 0}/{room.maxReceivers ?? 0}
+              Members: {room.receivers.length ?? 0}/{room.maxReceivers ?? 0}
             </span>
           </div>
         </div>

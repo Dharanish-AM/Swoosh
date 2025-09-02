@@ -137,3 +137,32 @@ export const removeFile = async (userId, roomId, fileId, dispatch) => {
     throw new Error("Remove file failed");
   }
 };
+
+export const removeUserFromRoom = async (
+  userId,
+  roomId,
+  removeUserId,
+  dispatch
+) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/room/remove?userId=${userId}&roomId=${roomId}&removeUserId=${removeUserId}`,
+      null,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
+    if (response.status === 200) {
+      await getUser(userId, dispatch);
+    }
+    return response;
+  } catch (error) {
+    console.error("Remove user from room error:", error);
+    if (error.response && error.response.data) {
+      throw new Error(
+        error.response.data.message || "Remove user from room failed"
+      );
+    }
+    throw new Error("Remove user from room failed");
+  }
+};
