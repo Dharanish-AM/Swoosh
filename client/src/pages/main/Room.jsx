@@ -9,7 +9,8 @@ import {
 } from "../../services/userService";
 import toast from "react-hot-toast";
 import { BounceLoader } from "react-spinners";
-import { Download } from "lucide-react";
+import { Clipboard, CloudUpload, Download, QrCode } from "lucide-react";
+import QRCode from "../../components/QRCode";
 
 export default function Room() {
   const roomId = useParams().id;
@@ -17,6 +18,7 @@ export default function Room() {
   const dispatch = useDispatch();
   const [currentRoom, setCurrentRoom] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [showQR, setShowQR] = useState(false);
 
   const [activeTab, setActiveTab] = useState("files");
 
@@ -135,45 +137,37 @@ export default function Room() {
   }
 
   return (
-    <div className="w-screen h-screen p-8 overflow-y-auto bg-[var(--bg-color)]">
+    <div className="w-screen h-screen p-8 overflow-y-auto bg-gray-50">
       {/* Header Section */}
       <div className="flex justify-between items-start mb-8 w-full">
         <div className="max-w-3xl">
           <div className="flex items-center space-x-4 mb-2">
-            <h1 className="text-3xl font-semibold text-[var(--text-color)]">
+            <h1 className="text-3xl font-semibold text-gray-800 tracking-tight">
               {currentRoom?.roomName || "Room"}
             </h1>
-            <span className="px-3 py-1 rounded-full bg-[var(--accent-color)] text-[var(--text-color)] text-sm font-medium">
+            <span className="px-3 py-1 rounded-full bg-[var(--accent-color)] text-[var(--accent-color)]] text-sm font-medium">
               Owner: {currentRoom?.sender?.name || "Unknown"}
             </span>
-            <div className="flex items-center space-x-2 border border-gray-300 rounded-lg px-3 py-1 cursor-pointer select-none">
-              <span className="text-[var(--text-color)] font-mono text-sm">
+            <div className="flex items-center space-x-2 border border-gray-300 rounded-lg px-3 py-1 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 transition">
+              <span className="font-mono">
                 Code: {currentRoom?.roomCode?.toUpperCase()}
               </span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-[var(--text-color)]"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M8 16h8M8 12h8m-8-4h8M5 20h14a2 2 0 002-2v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2z"
-                />
-              </svg>
+              <Clipboard size={18} />
             </div>
-            <button className="ml-4 px-4 py-1 rounded-lg bg-[var(--primary-color)] text-white hover:opacity-90 font-medium shadow-sm">
-              QR
+            <button
+              onClick={() => setShowQR((prev) => !prev)}
+              aria-label="Show QR Code"
+              className="p-1.5 rounded-lg border border-gray-300 cursor-pointer hover:bg-gray-50 text-gray-500"
+              type="button"
+            >
+              <QrCode size={18} />
             </button>
           </div>
-          <p className="text-[var(--text-color)]/80 max-w-xl">
+          <p className="text-gray-600 max-w-xl mt-2">
             {currentRoom?.roomDescription}
           </p>
         </div>
-        <div className="flex flex-col items-end space-y-3 text-sm text-[var(--text-color)]">
+        <div className="flex flex-col items-end space-y-3 text-sm text-gray-600">
           <div className="flex items-center space-x-2">
             <span className="flex items-center space-x-1">
               <span
@@ -190,7 +184,17 @@ export default function Room() {
           </div>
           <div>
             <div className="text-[var(--text-color)]/70 text-xs">
-              Expires at {currentRoom?.expiresAt}
+              Expires at{" "}
+              {currentRoom?.expiresAt
+                ? new Date(currentRoom.expiresAt).toLocaleString("en-GB", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                  })
+                : "Unknown"}
             </div>
           </div>
           <div>
@@ -204,15 +208,14 @@ export default function Room() {
         </div>
       </div>
 
-      {/* Tabs Navigation & Content */}
       <div className="mb-8 border-b border-gray-300">
         <nav className="-mb-px flex space-x-8" aria-label="Tabs">
           <button
             onClick={() => setActiveTab("files")}
             className={`whitespace-nowrap py-4 px-1 border-b-2 ${
               activeTab === "files"
-                ? "border-[var(--primary-color)] text-[var(--primary-color)] font-semibold"
-                : "border-transparent text-[var(--text-color)]/70 hover:text-[var(--text-color)] hover:border-[var(--accent-color)] text-sm font-medium"
+                ? "border-blue-500 text-blue-600 font-semibold"
+                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 text-sm font-medium"
             }`}
           >
             Files
@@ -222,8 +225,8 @@ export default function Room() {
               onClick={() => setActiveTab("receivers")}
               className={`whitespace-nowrap py-4 px-1 border-b-2 ${
                 activeTab === "receivers"
-                  ? "border-[var(--primary-color)] text-[var(--primary-color)] font-semibold"
-                  : "border-transparent text-[var(--text-color)]/70 hover:text-[var(--text-color)] hover:border-[var(--accent-color)] text-sm font-medium"
+                  ? "border-blue-500 text-blue-600 font-semibold"
+                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 text-sm font-medium"
               }`}
             >
               Receivers
@@ -232,39 +235,24 @@ export default function Room() {
         </nav>
       </div>
 
-      {/* Tab Content */}
       <div>
         {activeTab === "files" && (
           <div>
-            {/* File Upload Area - Only for Room Owner */}
             {currentRoom?.status !== "EXPIRED" &&
               Number(currentRoom?.sender?.id) === Number(user.id) && (
                 <div className="mb-10">
                   <label
                     htmlFor="file-upload"
-                    className="relative flex flex-col items-center justify-center border-4 border-dashed border-gray-300 rounded-xl h-48 cursor-pointer hover:border-[var(--primary-color)] transition-colors"
+                    className="relative flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl h-44 cursor-pointer hover:border-[var(--primary-color)] transition-colors bg-white"
                   >
                     <div className="text-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="mx-auto h-12 w-12 text-[var(--text-color)] mb-3"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M7 16V4a1 1 0 011-1h8a1 1 0 011 1v12M7 16h10M7 16l-4 4m0 0l4 4m-4-4h18"
-                        />
-                      </svg>
-                      <p className="text-[var(--text-color)] mb-2">
+                      <CloudUpload className="mx-auto h-12 w-12 text-gray-600 mb-3" />
+                      <p className="text-gray-600 mb-2">
                         Drag & drop files here
                       </p>
                       <button
                         type="button"
-                        className="inline-block px-6 py-2 border border-gray-300 rounded-md text-[var(--text-color)] hover:bg-gray-100 transition"
+                        className="inline-block px-5 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-100 transition"
                         onClick={() =>
                           document.getElementById("file-upload").click()
                         }
@@ -285,14 +273,14 @@ export default function Room() {
 
             {/* Shared Files List */}
             <div>
-              <h2 className="text-xl font-semibold text-[var(--text-color)] mb-4">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 Shared Files
               </h2>
               <ul className="space-y-4">
                 {currentRoom?.files?.map((file, index) => (
                   <li
                     key={index}
-                    className="flex items-center justify-between w-full bg-white rounded-lg shadow-sm p-4"
+                    className="flex items-center justify-between w-full bg-white rounded-lg border border-gray-200 p-4 shadow-sm"
                   >
                     <div className="flex items-center space-x-4">
                       <div className="flex-shrink-0 w-10 h-10">
@@ -307,10 +295,10 @@ export default function Room() {
                         />
                       </div>
                       <div>
-                        <p className="font-semibold text-[var(--text-color)]">
+                        <p className="font-medium text-gray-800">
                           {file.fileName}
                         </p>
-                        <p className="text-[var(--text-color)]/70 text-sm">
+                        <p className="text-gray-500 text-sm">
                           {(() => {
                             const size = file.fileSize;
                             let sizeStr = "";
@@ -345,12 +333,12 @@ export default function Room() {
                     </div>
                     <div className="flex flex-col items-end space-y-1">
                       {file.status === "COMPLETED" && (
-                        <span className="px-3 py-1 rounded-full bg-[var(--primary-color)]/20 text-[var(--primary-color)] text-xs font-semibold">
+                        <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-medium">
                           COMPLETED
                         </span>
                       )}
                       {file.status === "IN_PROGRESS" && (
-                        <span className="px-3 py-1 rounded-full bg-[var(--accent-color)]/30 text-[var(--accent-color)] text-xs font-semibold">
+                        <span className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-medium">
                           IN PROGRESS
                         </span>
                       )}
@@ -359,7 +347,7 @@ export default function Room() {
                           onClick={() =>
                             handleDownloadFile(file.id, file.fileName)
                           }
-                          className="flex items-center px-3.5 py-2 rounded-md bg-[var(--blue-color)] text-white text-sm hover:opacity-90"
+                          className="flex cursor-pointer items-center px-3.5 py-2 rounded-lg bg-[var(--blue-color)] text-white text-sm  transition"
                         >
                           <Download size={17} className="mr-2" />
                           Download
@@ -368,7 +356,7 @@ export default function Room() {
                           Number(user.id) && (
                           <button
                             onClick={() => handleRemoveFile(file.id)}
-                            className="flex items-center px-3.5 py-2 rounded-md bg-[var(--red-color)] text-white text-sm hover:opacity-90"
+                            className="flex cursor-pointer items-center px-3.5 py-2 rounded-lg bg-[var(--red-color)] text-white text-sm  transition"
                           >
                             Remove
                           </button>
@@ -383,29 +371,29 @@ export default function Room() {
         )}
         {activeTab === "receivers" && (
           <div className="mb-10">
-            <h2 className="text-xl font-semibold text-[var(--text-color)] mb-4">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
               Receivers
             </h2>
-            <ul className="space-y-1 text-[var(--text-color)]">
+            <ul className="space-y-1">
               {Array.isArray(currentRoom?.receivers) &&
               currentRoom.receivers.length > 0 ? (
                 currentRoom.receivers.map((receiver, idx) => (
                   <li
                     key={receiver.id || idx}
-                    className="flex justify-between items-center text-sm"
+                    className="flex justify-between items-center text-sm bg-white p-3 rounded-lg border border-gray-200"
                   >
                     <div>
                       <span>{receiver?.name ?? "Unknown"}</span>
                       {receiver?.email && (
-                        <span className="text-[var(--text-color)]/70 ml-2">
-                          ({receiver.email})
+                        <span className="text-gray-500 ml-2">
+                          {receiver.email}
                         </span>
                       )}
                     </div>
                     {Number(currentRoom?.sender?.id) === Number(user.id) && (
                       <button
                         onClick={() => handleRemoveReceiver(receiver.id)}
-                        className="px-2 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600"
+                        className="px-2.5 py-1 rounded-lg bg-red-500 text-white text-xs hover:bg-red-600 transition"
                       >
                         Remove
                       </button>
@@ -413,14 +401,17 @@ export default function Room() {
                   </li>
                 ))
               ) : (
-                <li className="text-sm text-[var(--text-color)]/70">
-                  No receivers found.
-                </li>
+                <li className="text-sm text-gray-500">No receivers found.</li>
               )}
             </ul>
           </div>
         )}
       </div>
+      {
+        showQR && (
+          <QRCode room={currentRoom} setShowQr={setShowQR} />
+        )
+      }
     </div>
   );
 }

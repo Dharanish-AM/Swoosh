@@ -97,19 +97,19 @@ export default function QRCode({ room, setShowQr }) {
   return (
     <div
       onClick={() => setShowQr(false)}
-      className="fixed inset-0 bg-black/40 flex justify-center items-center z-50 cursor-pointer"
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 cursor-pointer"
       aria-modal="true"
       role="dialog"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-xl shadow-md p-8 max-w-md w-full flex flex-col gap-6 cursor-default"
+        className="bg-white rounded-xl shadow-xl p-8 max-w-md w-full flex flex-col gap-6 cursor-default"
       >
         <div className="flex justify-between items-center">
-          <h2 className="font-bold text-[#305C91] text-xl">Room QR Code</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Room QR Code</h2>
           <button
             onClick={() => setShowQr(false)}
-            className="text-[#305C91] hover:text-[#1e4470] transition-colors"
+            className="text-gray-400 hover:text-gray-600 transition"
             aria-label="Close QR code modal"
           >
             <X size={24} />
@@ -118,44 +118,44 @@ export default function QRCode({ room, setShowQr }) {
 
         <div
           ref={qrRef}
-          className="bg-gray-50 rounded-xl border border-gray-200 flex justify-center items-center p-6"
+          className="bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center p-6"
         >
           <QRCodeLib value={shareUrl  || "No Code"} size={192} />
         </div>
 
         <div
           onClick={() => copyToClipboard(room?.roomCode?.toUpperCase()  || "")}
-          className="flex items-center gap-3 cursor-pointer select-all bg-green-50 px-4 py-2 rounded-md"
+          className="flex items-center gap-3 cursor-pointer select-all bg-gray-100 hover:bg-gray-200 transition px-4 py-2 rounded-lg"
         >
           <div className="flex flex-col flex-1">
-            <span className="text-gray-400 text-xs mb-1">Room Code</span>
-            <span className="text-[#305C91] font-bold font-mono text-lg">
+            <span className="text-gray-500 text-xs mb-1">Room Code</span>
+            <span className="text-[var(--primary-color)] font-semibold font-mono text-lg">
               {room?.roomCode?.toUpperCase()  || "N/A"}
             </span>
           </div>
-          <Clipboard size={20} className="text-[#305C91]" />
+          <Clipboard size={20} className="text-gray-500" />
         </div>
         {copied && (
-          <p className="text-green-600 text-sm mt-1">Copied to clipboard!</p>
+          <p className="text-green-500 text-sm mt-1">Copied to clipboard!</p>
         )}  
 
-        <p className="text-gray-500 text-sm">
+        <p className="text-gray-600 text-sm">
           Scan this QR code or share the room code to invite others
         </p>
 
-        <div className="flex flex-col gap-1">
-          <span className="text-gray-400 text-xs">Share URL</span>
+        <div className="flex flex-col gap-1 mt-2">
+          <span className="text-gray-500 text-xs">Share URL</span>
           <a onClick={()=>{
             window.open(shareUrl, "_blank");
-          }} className="font-mono text-[#305C91] break-all cursor-pointer select-all">
+          }} className="font-mono text-blue-600 break-all cursor-pointer select-all hover:underline">
             {shareUrl}
           </a>
         </div>
 
-        <div className="flex gap-4 mt-4">
+        <div className="flex gap-3 mt-4">
           <button
             onClick={downloadQRCode}
-            className="border border-[#305C91] text-[#305C91] bg-white px-4 py-2 rounded-lg font-medium flex items-center gap-2"
+            className="border border-gray-300 text-gray-700 bg-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 hover:bg-gray-50 transition"
             type="button"
           >
             <Download size={18} />
@@ -163,7 +163,7 @@ export default function QRCode({ room, setShowQr }) {
           </button>
           <button
             onClick={shareRoom}
-            className="bg-[#16C47F] text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2"
+            className="bg-[var(--primary-color)] text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 hover:bg-[var(--primary-color)]600 transition"
             type="button"
           >
             <Share2 size={18} />
@@ -172,7 +172,7 @@ export default function QRCode({ room, setShowQr }) {
         </div>
 
         {timeLeft && (
-          <p className="text-gray-400 text-sm mt-4">Expires in: {timeLeft}</p>
+          <p className="text-gray-500 text-sm mt-4">Expires in: {timeLeft}</p>
         )}
       </div>
     </div>

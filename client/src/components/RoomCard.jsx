@@ -72,22 +72,16 @@ export default function RoomCard({ room }) {
 
   return (
     <>
-      <div className="bg-white rounded-2xl p-6 flex flex-col gap-4 w-full max-w-lg">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 flex flex-col gap-3 w-full max-w-md">
         <div className="flex justify-between items-start">
           <div>
             <div className="flex items-center justify-between mb-2">
-              <p className="font-bold text-base text-[var(--text-color-light)] mr-2">
+              <p className="font-semibold text-lg text-gray-800 mr-2">
                 {room.roomName}
               </p>
-              <span
-                className={`w-3 h-3 rounded-full ${
-                  isActive ? "bg-green-500" : "bg-[var(--red-color)]"
-                }`}
-                title={isActive ? "Active" : "Expired"}
-              ></span>
             </div>
-            <p className="text-gray-600 text-sm mt-2">{room.roomDescription}</p>
-            <p className="text-gray-500 text-xs mt-1">
+            <p className="text-gray-600 text-sm mt-1">{room.roomDescription}</p>
+            <p className="text-gray-400 text-xs">
               Owner:{" "}
               {room.sender?.name === user.name
                 ? "Me"
@@ -101,7 +95,7 @@ export default function RoomCard({ room }) {
                 setShowQr(true);
               }}
               aria-label="Show QR Code"
-              className="p-2 rounded-md hover:bg-gray-100 text-gray-600"
+              className="p-1.5 rounded-lg hover:bg-gray-50 text-gray-500"
               type="button"
             >
               <QrCode size={18} />
@@ -109,7 +103,7 @@ export default function RoomCard({ room }) {
 
             <div
               onClick={handleCopy}
-              className="bg-yellow-100 px-3 py-2 rounded-md text-sm font-mono text-gray-800 select-all flex items-center gap-2 cursor-pointer w-max"
+              className="bg-[var(--accent-color)]/70 px-2.5 py-1.5 font-semibold rounded-lg text-xs font-mono text-gray-700 flex items-center gap-1 cursor-pointer w-max transition"
               title="Click to copy room code"
             >
               <span
@@ -130,16 +124,16 @@ export default function RoomCard({ room }) {
 
         <div className="flex flex-wrap gap-4 text-gray-600 text-xs">
           <div className="flex items-center gap-1">
-            <Users size={16} />
+            <Users size={16} className="text-gray-400" />
             <span>
               Members: {room.receivers.length ?? 0}/{room.maxReceivers ?? 0}
             </span>
           </div>
         </div>
 
-        <div className="text-gray-700 text-xs flex flex-wrap gap-4">
+        <div className="text-gray-500 text-xs flex flex-wrap gap-3">
           <div className="flex items-center gap-1">
-            <Clock size={16} />
+            <Clock size={16} className="text-gray-400" />
             <span>
               Created at{" "}
               {new Date(room.createdAt).toLocaleDateString(undefined, {
@@ -159,7 +153,7 @@ export default function RoomCard({ room }) {
             </span>
           </div>
           <div className="flex items-center gap-1">
-            <Clock size={16} />
+            <Clock size={16} className="text-gray-400" />
             <span>{timeLeft} left</span>
           </div>
         </div>
@@ -171,7 +165,7 @@ export default function RoomCard({ room }) {
               type="button"
               onClick={handleDelete}
               aria-label="Delete Room"
-              className="rounded-xl cursor-pointer px-3 py-1.5 font-semibold text-xs bg-[var(--red-color)] text-white shadow-sm hover:bg-[var(--red-color)]/90 transition-colors duration-200 flex items-center gap-1"
+              className="rounded-lg cursor-pointer px-3 py-1.5 font-medium text-xs bg-[var(--red-color)] text-white hover:bg-red-600 transition flex items-center gap-1"
             >
               <Trash2 size={16} />
               Delete
@@ -183,10 +177,10 @@ export default function RoomCard({ room }) {
               }}
                 type="button"
                 disabled={!isActive}
-                className={`rounded-xl cursor-pointer px-3 py-1.5 font-semibold text-xs shadow-sm transition-colors duration-200 ${
+                className={`rounded-lg cursor-pointer px-3 py-1.5 font-medium text-xs transition ${
                   isActive
-                    ? "bg-[var(--blue-color)] text-white"
-                    : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                    ? "bg-[var(--text-color)] text-white "
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
                 }`}
               >
                 {isActive && room.sender?.id === currentUserId

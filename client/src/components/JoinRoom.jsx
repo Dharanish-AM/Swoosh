@@ -28,10 +28,10 @@ export default function JoinRoom({onClose}) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="fixed inset-0 bg-black/40 bg-opacity-40"></div>
-      <div className="relative bg-white max-w-sm w-full mx-4 rounded-xl shadow-2xl p-8 flex flex-col items-stretch">
-        <h2 className="mb-6 text-center text-2xl font-semibold">Join Room</h2>
-        <label htmlFor="room-code" className="mb-2 font-medium text-gray-700">
+      <div className="fixed inset-0 bg-black/50"></div>
+      <div className="relative bg-white max-w-md w-full mx-4 rounded-xl shadow-xl p-8 flex flex-col">
+        <h2 className="mb-6 text-center text-2xl font-semibold text-gray-800">Join Room</h2>
+        <label htmlFor="room-code" className="mb-2 text-sm font-medium text-gray-600">
           Room Code
         </label>
         <input
@@ -42,20 +42,20 @@ export default function JoinRoom({onClose}) {
           onChange={(e) => {
             setRoomCode(e.target.value);
           }}
-          className="mb-6 px-4 py-3 rounded-md border border-gray-300 text-base focus:outline-none focus:ring-[var(--primary-color)]/30 focus:border-[var(--primary-color)]"
+          className="mb-6 px-4 py-2.5 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
         />
-        <div className="flex gap-4 justify-end">
+        <div className="flex justify-end gap-3 pt-2">
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2 cursor-pointer rounded-md bg-gray-200 text-gray-700 font-medium hover:bg-gray-300 transition"
+            className="px-3.5 py-2 text-sm rounded-lg bg-gray-100 text-gray-700 font-medium hover:bg-gray-200 transition"
           >
             Cancel
           </button>
           <button
             type="submit"
             onClick={handleJoinRoom}
-            className="px-5 cursor-pointer py-2 rounded-md bg-[var(--primary-color)] text-white font-medium transition"
+            className="px-3.5 py-2 text-sm cursor-pointer rounded-lg bg-[var(--primary-color)] text-white font-medium hover:bg-[var(--primary-color)] transition"
           >
             Join Room
           </button>
