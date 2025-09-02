@@ -136,6 +136,10 @@ export default function Room() {
     );
   }
 
+  const handleLeaveRoom = () => {
+    return null;
+  };
+
   return (
     <div className="w-screen h-screen p-8 overflow-y-auto bg-gray-50">
       {/* Header Section */}
@@ -166,23 +170,21 @@ export default function Room() {
           <p className="text-gray-600 max-w-xl mt-2">
             {currentRoom?.roomDescription}
           </p>
-        </div>
-        <div className="flex flex-col items-end space-y-3 text-sm text-gray-600">
-          <div className="flex items-center space-x-2">
-            <span className="flex items-center space-x-1">
-              <span
-                className={`h-3 w-3 rounded-full inline-block ${
-                  currentRoom?.status === "ACTIVE"
-                    ? "bg-[var(--primary-color)]"
-                    : currentRoom?.status === "EXPIRED"
-                    ? "bg-[var(--red-color)]"
-                    : "bg-gray-400"
-                }`}
-              ></span>
-              <span className="font-semibold">{currentRoom?.status}</span>
-            </span>
-          </div>
-          <div>
+          <div className="flex flex-col mt-6 space-y-3 text-sm text-gray-600">
+            <div className="flex items-center space-x-2">
+              <span className="flex items-center space-x-1">
+                <span
+                  className={`h-3 w-3 rounded-full inline-block ${
+                    currentRoom?.status === "ACTIVE"
+                      ? "bg-[var(--primary-color)]"
+                      : currentRoom?.status === "EXPIRED"
+                      ? "bg-[var(--red-color)]"
+                      : "bg-gray-400"
+                  }`}
+                ></span>
+                <span className="font-semibold">{currentRoom?.status}</span>
+              </span>
+            </div>
             <div className="text-[var(--text-color)]/70 text-xs">
               Expires at{" "}
               {currentRoom?.expiresAt
@@ -196,15 +198,28 @@ export default function Room() {
                   })
                 : "Unknown"}
             </div>
+            <div>
+              <span className="font-semibold">
+                {Array.isArray(currentRoom?.receivers)
+                  ? currentRoom.receivers.length
+                  : 0}
+              </span>{" "}
+              online
+            </div>
           </div>
-          <div>
-            <span className="font-semibold">
-              {Array.isArray(currentRoom?.receivers)
-                ? currentRoom.receivers.length
-                : 0}
-            </span>{" "}
-            online
-          </div>
+        </div>
+        <div>
+          {Number(currentRoom?.sender?.id) !== Number(user.id) && (
+            <div className="pt-2">
+              <button
+                onClick={handleLeaveRoom}
+                className="px-3 py-1 rounded-lg bg-red-500 text-white text-sm hover:bg-red-600 transition"
+                type="button"
+              >
+                Leave Room
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -214,7 +229,7 @@ export default function Room() {
             onClick={() => setActiveTab("files")}
             className={`whitespace-nowrap py-4 px-1 border-b-2 ${
               activeTab === "files"
-                ? "border-blue-500 text-blue-600 font-semibold"
+                ? "border-[var(--blue-color)] text-[var(--blue-color)] font-semibold"
                 : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 text-sm font-medium"
             }`}
           >
@@ -225,7 +240,7 @@ export default function Room() {
               onClick={() => setActiveTab("receivers")}
               className={`whitespace-nowrap py-4 px-1 border-b-2 ${
                 activeTab === "receivers"
-                  ? "border-blue-500 text-blue-600 font-semibold"
+                  ? "border-[var(--blue-color)] text-[var(--blue-color)] font-semibold"
                   : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 text-sm font-medium"
               }`}
             >
@@ -407,11 +422,7 @@ export default function Room() {
           </div>
         )}
       </div>
-      {
-        showQR && (
-          <QRCode room={currentRoom} setShowQr={setShowQR} />
-        )
-      }
+      {showQR && <QRCode room={currentRoom} setShowQr={setShowQR} />}
     </div>
   );
 }
