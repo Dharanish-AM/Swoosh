@@ -14,7 +14,7 @@ export default function Header() {
         onClick={() => {
           setShowProfile(true);
         }}
-        className="h-10 w-10 flex items-center justify-center text-lg font-medium rounded-full bg-[var(--text-color)] text-white cursor-pointer hover:bg-[var(--primary-color)]600 transition"
+        className="h-10 w-10 flex items-center justify-center text-lg font-medium rounded-full bg-gray-500 cursor-pointer text-white hover:bg-[var(--primary-color)]600 transition"
       >
         {user?.name[0]?.toUpperCase()}
       </div>

@@ -2,6 +2,7 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import Signup from "../../components/Signup";
 import Login from "../../components/Login";
+import illustration from "../../assets/undraw_online-connection_c56e.svg";
 
 export default function Auth() {
   const location = useLocation().pathname;
@@ -16,7 +17,13 @@ export default function Auth() {
         <div className="w-full sm:w-1/2 h-full flex justify-center items-center p-4">
           {isSignup ? <Signup /> : <Login />}
         </div>
-        <div className="hidden sm:flex w-1/2 h-full justify-center items-center bg-white"></div>
+        <div className="hidden pr-26 pb-20 sm:flex w-1/2 h-full justify-center items-center">
+          <img
+            src={illustration}
+            alt="Illustration"
+            className="max-w-full h-auto"
+          />
+        </div>
       </div>
     </div>
   );

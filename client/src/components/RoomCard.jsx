@@ -165,7 +165,7 @@ export default function RoomCard({ room }) {
               type="button"
               onClick={handleDelete}
               aria-label="Delete Room"
-              className="rounded-lg cursor-pointer px-3 py-1.5 font-medium text-xs bg-[var(--red-color)] text-white hover:bg-red-600 transition flex items-center gap-1"
+              className="rounded-lg cursor-pointer px-3 py-1.5 font-medium text-xs bg-[var(--red-color)] text-white transition flex items-center gap-1"
             >
               <Trash2 size={16} />
               Delete

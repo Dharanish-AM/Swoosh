@@ -42,14 +42,14 @@ export default function Home() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setJoinRoom(true)}
-              className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 transition text-white font-medium px-4 py-2 rounded-lg shadow-sm text-sm"
+              className="flex items-center gap-2 cursor-pointer bg-[var(--blue-color)] transition text-white font-medium px-4 py-2 rounded-lg shadow-sm text-sm"
             >
               <Merge size={16} />
               <span>Join Room</span>
             </button>
             <button
               onClick={() => setCreateRoom(true)}
-              className="flex items-center gap-2 bg-green-500 hover:bg-green-600 transition text-white font-medium px-4 py-2 rounded-lg shadow-sm text-sm"
+              className="flex items-center gap-2 bg-[var(--primary-color)] cursor-pointer transition text-white font-medium px-4 py-2 rounded-lg shadow-sm text-sm"
             >
               <PlusIcon size={16} />
               <span>Create Room</span>
